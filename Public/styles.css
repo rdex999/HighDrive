@@ -1,0 +1,17 @@
+.title{
+    font-size: 200%;
+    color: black;
+    font-weight: bold;
+}
+
+a.topLogin:visited{
+    font-size: 200%;
+    color: black;
+    float: right;
+}
+
+a.topLogin{
+    font-size: 200%;
+    color: black;
+    float: right;
+}
