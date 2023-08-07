@@ -16,8 +16,8 @@ Server.get("/", (req, res) => {
     res.render("index");
 });
 
-Server.get("/about", (req, res) => {
-    res.render("about");
+Server.get("/SignUp", (req, res) => {
+    res.render("SignUp");
 });
 
 Server.use((req, res) => {
