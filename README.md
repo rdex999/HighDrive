@@ -3,7 +3,7 @@ A "cloud" drive on your local network that you can sign in to using a user-name 
 Writen in Html and Javascript.
 
 Start the server by running:
-node server.js
+node Server.js
 
 Note: you need to have nodejs installed.
 
