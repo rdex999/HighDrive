@@ -1,17 +1,28 @@
 .title{
     font-size: 200%;
-    color: black;
     font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+.inlineTitle{
+    float: left; 
+    font-size: 200%;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
 }
 
 a.topLogin:visited{
-    font-size: 200%;
-    color: black;
+    font-size: 180%;
+    color: darkslategray;
     float: right;
+    padding: 5px;
 }
 
 a.topLogin{
-    font-size: 200%;
-    color: black;
+    font-size: 180%;
+    color: darkslategray;
     float: right;
+    padding: 5px;
 }
