@@ -26,3 +26,17 @@ a.topLogin{
     float: right;
     padding: 5px;
 }
+
+#SignUpSuccess{
+    color: chartreuse;
+    border-style: groove;
+    border-color: chartreuse;
+    border-width: 1px;
+}
+
+#SignUpError{
+    color: red;
+    border-style: groove;
+    border-color: red;
+    border-width: 1px;
+}
