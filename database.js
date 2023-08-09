@@ -20,13 +20,23 @@ module.exports =
 
     userExist: (usrname, callback) => {
         dbConnection.collection("users")
-        .findOne({ username: usrname })
-        .then(user => {
-            if(user){
-                return callback(true);
-            }else{
-                return callback(false);
-            }
-        });
+            .findOne({ username: usrname })
+            .then(user => {
+                if(user){
+                    return callback(true);
+                }else{
+                    return callback(false);
+                }
+            });
+    },
+
+    createUser: (usrname, passwd, callback) => {
+        dbConnection.collection("users")
+            .insertOne({
+                username: usrname,
+                password: passwd
+            }).then(result => {
+                return callback(result);
+            })
     }
 }

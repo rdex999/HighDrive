@@ -20,6 +20,10 @@ a.topLogin:visited{
     padding: 5px;
 }
 
+a:hover{
+    color: #273D46;
+}
+
 a.topLogin{
     font-size: 180%;
     color: darkslategray;

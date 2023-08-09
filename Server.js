@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, getDb, userExist } = require("./database.js");
+const { connectToDb, getDb, userExist, createUser } = require("./database.js");
 const { exit } = require("process");
 
 // Create app
@@ -56,7 +56,9 @@ app.post("/SignUp", (req, res) => {
         if(result){
             res.render("SignUp", { SignUpState: 2, username: req.body.username});
         }else{
-            res.render("SignUp", { SignUpState: 1});
+            createUser(req.body.username, req.body.password, result => {
+                res.render("SignUp", { SignUpState: 1});
+            })
         }
     });
 });
