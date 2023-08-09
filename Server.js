@@ -1,39 +1,57 @@
-const Express = require("express");
-const Server = Express();
+const express = require("express");
+const { connectToDb, getDb} = require("./database.js");
+const { exit } = require("process");
+
+// Create app
+const app = express();
+
+// Database connection
+let database;
+
+// connect to MongoDb database
+connectToDb(err => {
+    if(err){
+        console.log("\nCould not connect to the database.\nQuiting.");
+        exit(1);
+    }else{
+        database = getDb();
+        console.log("\nConnected to database succesfuly.\n");
+    }
+});
 
 // Set view engine
-Server.set("view engine", "ejs");
+app.set("view engine", "ejs");
 
 // Listen on port 8080
-Server.listen(8080, () => {
+app.listen(8080, () => {
     console.log("\nStarting server on port 8080.\n");
 });
 
 // Make everything in the "Public" folder available from the browser (a stylesheet.css file for example)
-Server.use(Express.static("Public"));
+app.use(express.static("Public"));
 
 // Make json available (from post requests and stf)
-Server.use(Express.json());
-Server.use(Express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Prints some information about every request to the server
-Server.use((req, res, next) => {
+app.use((req, res, next) => {
     console.log(`\nRequest from: ${req.ip}\nType: ${req.method}\nPath: ${req.path}\nTime: ${Date()}`);
     next();
 });
 
-Server.get("/", (req, res) => {
+app.get("/", (req, res) => {
     res.render("index");
 });
 
-Server.get("/SignUp", (req, res) => {
+app.get("/SignUp", (req, res) => {
     res.render("SignUp", {SignUpState: false});
 });
 
-Server.post("/SignUp", (req, res) => {
-    res.render("SignUp", {username: req.body.username, SignUpState: true});
+app.post("/SignUp", (req, res) => {
+    
 });
 
-Server.use((req, res) => {
+app.use((req, res) => {
     res.status = 404; res.render("404");
 });
