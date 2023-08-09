@@ -16,5 +16,17 @@ module.exports =
             })
     },
 
-    getDb: () => dbConnection
+    getDb: () => dbConnection,
+
+    userExist: (usrname, callback) => {
+        dbConnection.collection("users")
+        .findOne({ username: usrname })
+        .then(user => {
+            if(user){
+                return callback(true);
+            }else{
+                return callback(false);
+            }
+        });
+    }
 }

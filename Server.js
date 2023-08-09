@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, getDb} = require("./database.js");
+const { connectToDb, getDb, userExist } = require("./database.js");
 const { exit } = require("process");
 
 // Create app
@@ -44,12 +44,21 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
-app.get("/SignUp", (req, res) => {
-    res.render("SignUp", {SignUpState: false});
+// Sign up state 0: user didnt try to sign up
+// Sign up state 1: user sign up succesfuly
+// Sign up state 2: user tryed to sign up with an existing username in database
+app.get("/SignUp", (req, res) => { 
+    res.render("SignUp", {SignUpState: 0});
 });
 
 app.post("/SignUp", (req, res) => {
-    
+    userExist(req.body.username, result => {
+        if(result){
+            res.render("SignUp", { SignUpState: 2, username: req.body.username});
+        }else{
+            res.render("SignUp", { SignUpState: 1});
+        }
+    });
 });
 
 app.use((req, res) => {
