@@ -51,6 +51,10 @@ app.get("/SignUp", (req, res) => {
     res.render("SignUp", {SignUpState: 0});
 });
 
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
 app.post("/SignUp", (req, res) => {
     userExist(req.body.username, result => {
         if(result){
