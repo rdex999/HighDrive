@@ -6,7 +6,7 @@ module.exports =
 {
     connectToDb: () => {
         return new Promise((resolve, reject) => {
-            MongoClient.connect("mongodb://localhost:27017/testing")
+            MongoClient.connect("mongodb://localhost:27017/HomeDrive")
             .then(res => {
                 dbConnection = res.db();
                 resolve(dbConnection);
