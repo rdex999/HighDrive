@@ -31,14 +31,14 @@ a.topLogin{
     padding: 5px;
 }
 
-#SignUpSuccess{
+.SignUpSuccess{
     color: chartreuse;
     border-style: groove;
     border-color: chartreuse;
     border-width: 1px;
 }
 
-#SignUpError{
+.SignUpError{
     color: red;
     border-style: groove;
     border-color: red;

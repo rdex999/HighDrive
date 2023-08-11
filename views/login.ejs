@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css">
+        <title>Home Drive | Login</title>
+    </head>
+    <body>
+        <a class="title" href="/">Home Drive</a>
+        <hr>
+        <br>
+        <h2>Login to an existing account.</h2>
+        <form action="/login" method="post">
+            <label for="username">User name:</label>
+            <input type="text" name="username" required>
+            <br><br>
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+            <br><br> 
+            <label for="RememberMe">Remember me</label>
+            <input type="checkbox" name="RememberMe">
+            <br><br> 
+            <input type="submit">
+        </form>
+
+        <% if(loginState === 1){ %>
+            <br> 
+            <div class="SignUpSuccess">
+                <p>Logged in succesfuly!</p>
+                <p>You can now browse your files if the home page.</p>
+            </div>
+        <% }else if(loginState === 2){ %>
+            <p class="SignUpError">Incorrect user name or password.</p>
+        <% }else if(loginState === 0){ %>
+        <% } %>
+
+    </body>
+</html>

@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, getDb, userExist, createUser } = require("./database.js");
+const { connectToDb, getDb, userExist, createUser, findUser} = require("./database.js");
 const { exit } = require("process");
 
 // Create app
@@ -51,10 +51,6 @@ app.get("/SignUp", (req, res) => {
     res.render("SignUp", {SignUpState: 0});
 });
 
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
 app.post("/SignUp", (req, res) => {
     userExist(req.body.username, result => {
         if(result){
@@ -64,6 +60,31 @@ app.post("/SignUp", (req, res) => {
                 res.render("SignUp", { SignUpState: 1});
             })
         }
+    });
+});
+
+// loginState 0: user didnt try to log in
+// loginState 1: user logged in succesfuly
+// loginState 2: user tryed to log in with an incorrect username of password
+app.get("/login", (req, res) => {
+    res.render("login", { loginState: 0 });
+});
+
+app.post("/login", (req, res) => {
+    findUser(req.body.username)
+    .then(user => {
+        if(user && req.body.password === user.password){
+            if(req.body.RememberMe === "on"){
+                // Make a login cookie for the user (in the future)
+            }else{
+                res.render("login", { loginState: 1 });
+            }
+        }else{
+            res.render("login", { loginState: 2 });
+        }
+    }).catch(err => {
+        console.log(err)
+        res.status(500).redirect("/");
     });
 });
 

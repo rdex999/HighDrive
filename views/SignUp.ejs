@@ -5,8 +5,11 @@
         <title>Home Drive | sign up</title>
     </head>
     <body>
-        <a href="/" class="title">Home Drive</a>
+        <a href="/" class="inlineTitle">Home Drive</a>
+        <a class="topLogin" href="/login">Log in</a> 
+        <br><br> 
         <hr> 
+        <br>
         <h2>Create Account</h2>
 
         <form action="/SignUp" method="post">
@@ -20,9 +23,13 @@
         </form>
 
         <% if(SignUpState == 1){ %>
-                <p id="SignUpSuccess">Created your account succesfuly!</p>
+            <br> 
+            <div class="SignUpSuccess">
+                <p>Created your account succesfuly!</p>
+                <p>You can now log in to your new account.</p>
+            </div>
         <% }else if(SignUpState == 2){ %>
-                <p id="SignUpError">User: <%= username %> already exists.</p>
+            <p class="SignUpError">User: <%= username %> already exists.</p>
         <% }else{ %>
 
         <% } %>

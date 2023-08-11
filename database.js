@@ -37,6 +37,18 @@ module.exports =
                 password: passwd
             }).then(result => {
                 return callback(result);
-            })
+            });
+    },
+
+    findUser: (usrname, callback) => {
+        return new Promise((resolve, reject) => {
+            dbConnection.collection("users")
+                .findOne({ username: usrname })
+                .then(user => {
+                    resolve(user);
+                }).catch(err => {
+                    reject(err);
+                });
+        });
     }
 }
