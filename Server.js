@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, getDb, userExist, createUser, findUser} = require("./database.js");
+const { connectToDb, userExist, createUser, findUser} = require("./database.js");
 const { exit } = require("process");
 
 // Create app
@@ -8,15 +8,13 @@ const app = express();
 // Database connection
 let database;
 
-// connect to MongoDb database
-connectToDb(err => {
-    if(err){
-        console.log("\nCould not connect to the database.\nQuiting.");
-        exit(1);
-    }else{
-        database = getDb();
-        console.log("\nConnected to database succesfuly.\n");
-    }
+// Connect to MongoDb database
+connectToDb().then(res => {
+    database = res;
+    console.log("Connected to the database succesfuly.\n");
+}).catch(err => {
+    console.log(`${err}\n\nQuiting due to a database connection error.`);
+    exit(1);
 });
 
 // Set view engine
@@ -41,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    res.render("index");
+    res.render("index", { userLoggedIn: false });
 });
 
 // Sign up state 0: user didnt try to sign up

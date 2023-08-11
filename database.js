@@ -4,19 +4,17 @@ let dbConnection;
 
 module.exports = 
 {
-    connectToDb: callback => {
-        MongoClient.connect("mongodb://localhost:27017/testing")
-            .then(client => {
-                dbConnection = client.db();
-                return callback();
-            })
-            .catch(err => {
-                console.log(err)
-                return callback(err);
-            })
+    connectToDb: () => {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect("mongodb://localhost:27017/testing")
+            .then(res => {
+                dbConnection = res.db();
+                resolve(dbConnection);
+            }).catch(err => {
+                reject(err);
+            });
+        });
     },
-
-    getDb: () => dbConnection,
 
     userExist: (usrname, callback) => {
         dbConnection.collection("users")
