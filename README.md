@@ -16,19 +16,35 @@ example for arch linux:
 ```
 sudo systemctl enable --now mongodb
 ```
+
 Clone the repo:
-`git clone https://github.com/rdex999/HomeDrive.git`
+```
+git clone https://github.com/rdex999/HomeDrive.git
+```
+
 Cd into the HomeDrive directory
-`cd HomeDrive`
+```
+cd HomeDrive
+```
+
 Install npm and nodejs (again, this may be different depending on your os.)
 example for arch linux:
-`sudo pacman -S nodejs npm`
+```
+sudo pacman -S nodejs npm
+```
+
 Install the npm pakages:
-`npm install`
+```
+npm install
+```
+
 Install mongodb-compass for a graphical user interface for managing the database
 (again, this may be different depending on your os.)
 example for arch linux:
-`yay -S mongodb-compass`
+```
+yay -S mongodb-compass
+```
+
 Launch mongodb-compass and click on connect,
 in the left panel click on the plus (+) icon
 under "Database Name" type exactly "HomeDrive"
@@ -38,7 +54,9 @@ click on "Create Database".
 And thats it!
 
 you can start the server by running:
-`node Server.js`
+```
+node Server.js
+```
 
 to access the website enter the following:
 http://<ServersIp>:8080
