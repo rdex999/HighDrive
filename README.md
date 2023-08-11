@@ -60,5 +60,5 @@ node Server.js
 ```
 
 to access the website enter the following:  
-http://<<ServersIp>>:8080
-Replace <<ServersIp>> with the Servers ip address (can be obtained from running `ifconfig` on linux)  
+"http://<<ServersIp>>:8080"
+Replace "<<ServersIp>>" with the Servers ip address (can be obtained from running `ifconfig` on linux)  
