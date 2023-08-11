@@ -12,7 +12,7 @@ let database;
 // Connect to MongoDb database
 connectToDb().then(res => {
     database = res;
-    console.log("Connected to the database succesfuly.\n");
+    console.log("Connected to the database successfully.\n");
 }).catch(err => {
     console.log(`${err}\n\nQuiting due to a database connection error.`);
     exit(1);
@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 });
 
 // Sign up state 0: user didnt try to sign up
-// Sign up state 1: user sign up succesfuly
+// Sign up state 1: user sign up successfully
 // Sign up state 2: user tryed to sign up with an existing username in database
 app.get("/SignUp", (req, res) => { 
     res.render("SignUp", {SignUpState: 0});
@@ -73,7 +73,7 @@ app.post("/SignUp", (req, res) => {
 });
 
 // loginState 0: user didnt try to log in
-// loginState 1: user logged in succesfuly
+// loginState 1: user logged in successfully
 // loginState 2: user tryed to log in with an incorrect username of password
 app.get("/login", (req, res) => {
     res.render("login", { loginState: 0 });
@@ -93,6 +93,10 @@ app.post("/login", (req, res) => {
         res.status(500).redirect("/");
     });
 });
+
+app.get("/signout", (req, res) => {
+    res.clearCookie("login").redirect("/");
+})
 
 app.use((req, res) => {
     res.status(404).render("404");

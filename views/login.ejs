@@ -5,7 +5,10 @@
         <title>Home Drive | Login</title>
     </head>
     <body>
-        <a class="title" href="/">Home Drive</a>
+        <a class="inlineTitle" href="/">Home Drive</a>
+        <a class="topLogin" href="/SignUp">Sign up</a>
+        <a class="topLogin" href="/login">Log in</a>
+        <br><br> 
         <hr>
         <br>
         <h2>Login to an existing account.</h2>
@@ -22,7 +25,7 @@
         <% if(loginState === 1){ %>
             <br> 
             <div class="SignUpSuccess">
-                <p>Logged in succesfuly!</p>
+                <p>Logged in successfully!</p>
                 <p>You can now browse your files if the home page.</p>
             </div>
         <% }else if(loginState === 2){ %>

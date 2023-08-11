@@ -13,6 +13,12 @@
     text-decoration: none;
 }
 
+a.topSignout{
+    font-size: 180%;
+    color: darkslategray;
+    float: right;
+}
+
 a.topLogin:visited{
     font-size: 180%;
     color: darkslategray;

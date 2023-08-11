@@ -9,14 +9,19 @@
         <a class="topLogin" href="/LogIn">Log in</a> 
         <br><br> 
         <% if(userLoggedIn){ %> 
-            <h2>Welcome to Home Drive, <%= username %></h2>
+            <br> 
+            <h2 style="float: left;">Welcome to Home Drive, <%= username %> </h2>
+            <br> 
+            <a class="topSignout" href="/signout">Sign out</a>
+            <br><br><br>
         <% } %>
         <hr>
         <br>
         <% if(!userLoggedIn){ %>
             <h3>In order to browse your files, you must log in first.</h3>
         <% }else{ %>
-
+            <h3>Your drive:</h3>     
         <% } %>
+
     </body>
 </html>
