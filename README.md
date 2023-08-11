@@ -48,8 +48,8 @@ yay -S mongodb-compass
 
 Launch mongodb-compass and click on connect,  
 in the left panel click on the plus (+) icon,  
-under "Database Name" type exactly "HomeDrive",  
-under "Collection Name" type exacly "users",  
+under "Database Name" type exactly: "HomeDrive",  
+under "Collection Name" type exacly: "users",  
 click on "Create Database".  
 
 And thats it!  

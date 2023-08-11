@@ -18,35 +18,35 @@ module.exports =
 
     userExist: (usrname, callback) => {
         dbConnection.collection("users")
-            .findOne({ username: usrname })
-            .then(user => {
-                if(user){
-                    return callback(true);
-                }else{
-                    return callback(false);
-                }
-            });
+        .findOne({ username: usrname })
+        .then(user => {
+            if(user){
+                return callback(true);
+            }else{
+                return callback(false);
+            }
+        });
     },
 
     createUser: (usrname, passwd, callback) => {
         dbConnection.collection("users")
-            .insertOne({
-                username: usrname,
-                password: passwd
-            }).then(result => {
-                return callback(result);
-            });
+        .insertOne({
+            username: usrname,
+            password: passwd
+        }).then(result => {
+            return callback(result);
+        });
     },
 
     findUser: (usrname, callback) => {
         return new Promise((resolve, reject) => {
             dbConnection.collection("users")
-                .findOne({ username: usrname })
-                .then(user => {
-                    resolve(user);
-                }).catch(err => {
-                    reject(err);
-                });
+            .findOne({ username: usrname })
+            .then(user => {
+                resolve(user);
+            }).catch(err => {
+                reject(err);
+            });
         });
     }
 }

@@ -8,6 +8,15 @@
         <a class="topLogin" href="/SignUp">Sign up</a>
         <a class="topLogin" href="/LogIn">Log in</a> 
         <br><br> 
+        <% if(userLoggedIn){ %> 
+            <h2>Welcome to Home Drive, <%= username %></h2>
+        <% } %>
         <hr>
+        <br>
+        <% if(!userLoggedIn){ %>
+            <h3>In order to browse your files, you must log in first.</h3>
+        <% }else{ %>
+
+        <% } %>
     </body>
 </html>

@@ -1,6 +1,7 @@
 const express = require("express");
 const { connectToDb, userExist, createUser, findUser} = require("./database.js");
 const { exit } = require("process");
+const cookieParser = require("cookie-parser");
 
 // Create app
 const app = express();
@@ -32,6 +33,9 @@ app.use(express.static("Public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Make cookies available
+app.use(cookieParser());
+
 // Prints some information about every request to the server
 app.use((req, res, next) => {
     console.log(`\nRequest from: ${req.ip}\nType: ${req.method}\nPath: ${req.path}\nTime: ${Date()}`);
@@ -39,7 +43,14 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    res.render("index", { userLoggedIn: false });
+    if(req.cookies.login){
+        res.render("index", {
+            userLoggedIn: true,
+            username: req.cookies.login.username
+        });
+    }else{
+        res.render("index", { userLoggedIn: false });
+    }
 });
 
 // Sign up state 0: user didnt try to sign up
@@ -72,11 +83,8 @@ app.post("/login", (req, res) => {
     findUser(req.body.username)
     .then(user => {
         if(user && req.body.password === user.password){
-            if(req.body.RememberMe === "on"){
-                // Make a login cookie for the user (in the future)
-            }else{
-                res.render("login", { loginState: 1 });
-            }
+            res.cookie("login", { username: user.username, password: user.password }, { maxAge: 1*24*60*60*1000 });
+            res.render("login", { loginState: 1 });
         }else{
             res.render("login", { loginState: 2 });
         }
@@ -87,5 +95,5 @@ app.post("/login", (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status = 404; res.render("404");
+    res.status(404).render("404");
 });
