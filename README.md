@@ -2,8 +2,8 @@
 A "cloud" drive on your local network that you can sign in to using a user-name and a password to store files.  
 Writen in Html and Javascript, using Mongodb as the database and Nodejs with Express for the server.  
   
-The server can be accessed on your local network, "http://<<ServersIp>>:8080"  
-Replace <<ServerIp>> with the servers ip address.  
+The server can be accessed on your local network, `http://<ServersIp>:8080`  
+Replace `<ServersIp>` with the servers ip address.  
 
 ## Installation instructions
 First install mongodb (depending on your os, this step could be different)  
@@ -60,5 +60,5 @@ node Server.js
 ```
 
 to access the website enter the following:  
-"http://<<ServersIp>>:8080"
-Replace "<<ServersIp>>" with the Servers ip address (can be obtained from running `ifconfig` on linux)  
+`http://<ServersIp>:8080`
+Replace `<ServersIp>` with the Servers ip address (can be obtained from running `ifconfig` on linux)  
