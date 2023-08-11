@@ -3,7 +3,7 @@ A "cloud" drive on your local network that you can sign in to using a user-name 
 Writen in Html and Javascript, using Mongodb as the database and Nodejs with Express for the server.
 
 The server can be accessed on your local network, "http://<ServersIp>:8080"
-Replase <ServerIp> with the servers ip address.
+Replace <ServerIp> with the servers ip address.
 
 ## Installation instructions
 First install mongodb (depending on your os, this step could be different)
@@ -47,9 +47,9 @@ yay -S mongodb-compass
 ```
 
 Launch mongodb-compass and click on connect,
-in the left panel click on the plus (+) icon
-under "Database Name" type exactly "HomeDrive"
-under "Collection Name" type exacly "users"
+in the left panel click on the plus (+) icon,
+under "Database Name" type exactly "HomeDrive",
+under "Collection Name" type exacly "users",
 click on "Create Database".
 
 And thats it!
@@ -61,4 +61,4 @@ node Server.js
 
 to access the website enter the following:
 http://<ServersIp>:8080
-Replase <ServersIp> with the Servers ip address (can be obtained from running `ifconfig` on linux)
+Replace <ServersIp> with the Servers ip address (can be obtained from running `ifconfig` on linux)
