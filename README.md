@@ -1,6 +1,6 @@
 # HomeDrive
 A "cloud" drive on your local network that you can sign in to using a user-name and a password to store files.
-Writen in Html and Javascript, using mongodb as the database.
+Writen in Html and Javascript, using Mongodb as the database and Nodejs with Express for the server.
 
 The server can be accessed on your local network, "http://<ServersIp>:8080"
 Replase <ServerIp> with the servers ip address.
