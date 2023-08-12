@@ -115,8 +115,8 @@ app.get("/signout", (req, res) => {
     res.clearCookie("login").redirect("/");
 })
 
-app.post("/upload", (req, res) => {
-    console.log(req.files);
+app.post("/upload", upload.array("files"), (req, res) => {
+    req.files.forEach(file => console.log(file));
     res.redirect("/");
 });
 
