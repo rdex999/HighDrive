@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const multerGridfs = require("multer-gridfs-storage");
 
 let dbConnection;
 
@@ -38,7 +39,7 @@ module.exports =
         });
     },
 
-    findUser: (usrname, callback) => {
+    findUser: usrname => {
         return new Promise((resolve, reject) => {
             dbConnection.collection("users")
             .findOne({ username: usrname })
@@ -48,5 +49,20 @@ module.exports =
                 reject(err);
             });
         });
-    }
+    },
+
+    storage: new multerGridfs.GridFsStorage({
+        url: "mongodb://localhost:27017/HomeDrive",
+        file: (req, file) => {
+            return new Promise((resolve, reject) => {
+                const newFilename = `${file.originalname}-${Date()}`;
+                const fileInfo = {
+                    filename: newFilename,
+                    bucketName: "uploads"
+                };
+                resolve(fileInfo);
+            });
+        }
+    })
+
 }

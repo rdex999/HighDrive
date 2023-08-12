@@ -13,6 +13,11 @@
     text-decoration: none;
 }
 
+#uploadSection{
+    font-weight: bold;
+    border-left: 5px solid red;
+}
+
 a.topSignout{
     font-size: 180%;
     color: darkslategray;

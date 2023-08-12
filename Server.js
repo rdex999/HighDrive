@@ -1,7 +1,14 @@
 const express = require("express");
-const { connectToDb, userExist, createUser, findUser} = require("./database.js");
+const { connectToDb, userExist, createUser, findUser, storage} = require("./database.js");
 const { exit } = require("process");
 const cookieParser = require("cookie-parser");
+const multer = require("multer");
+const multerGridfs = require("multer-gridfs-storage");
+const { MongoClient, GridFSBucket} = require("mongodb");
+
+const upload = multer({ storage });
+
+let gfs;
 
 // Create app
 const app = express();
@@ -12,6 +19,7 @@ let database;
 // Connect to MongoDb database
 connectToDb().then(res => {
     database = res;
+    gfs = new GridFSBucket(database, { bucketName: "uploads" });
     console.log("Connected to the database successfully.\n");
 }).catch(err => {
     console.log(`${err}\n\nQuiting due to a database connection error.`);
@@ -43,10 +51,19 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    if(req.cookies.login){
-        res.render("index", {
-            userLoggedIn: true,
-            username: req.cookies.login.username
+    if(req.cookies.login){ 
+        findUser(req.cookies.login.username)
+        .then(user => { 
+            if(req.cookies.login.password === user.password){ 
+                res.render("index", {
+                    userLoggedIn: true,
+                    username: req.cookies.login.username
+                });
+            }else{
+                res.render("index", { userLoggedIn: false });
+            }
+        }).catch(err => {
+            console.log(err)
         });
     }else{
         res.render("index", { userLoggedIn: false });
@@ -97,6 +114,11 @@ app.post("/login", (req, res) => {
 app.get("/signout", (req, res) => {
     res.clearCookie("login").redirect("/");
 })
+
+app.post("/upload", (req, res) => {
+    console.log(req.files);
+    res.redirect("/");
+});
 
 app.use((req, res) => {
     res.status(404).render("404");

@@ -20,7 +20,15 @@
         <% if(!userLoggedIn){ %>
             <h3>In order to browse your files, you must log in first.</h3>
         <% }else{ %>
-            <h3>Your drive:</h3>     
+            <div id="uploadSection">
+                <form enctype="multipart/form-data" style="margin: 10px;" action="/upload" method="post">
+                    <label for="files">Upload files:</label>
+                    <input type="file" name="files" multiple>
+                    <br><br>
+                    <input type="submit">
+                </form>
+            </div>
+            
         <% } %>
 
     </body>
