@@ -8,7 +8,7 @@ const { MongoClient, GridFSBucket} = require("mongodb");
 
 const upload = multer({ storage });
 
-let gfs;
+//let gfs;
 
 // Create app
 const app = express();
@@ -58,6 +58,12 @@ app.get("/", (req, res) => {
                 res.render("index", {
                     userLoggedIn: true,
                     username: req.cookies.login.username
+                });
+                user.ownsFiles.forEach(async userFilename => {
+                    const cursor = gfs.find({ filename: userFilename });
+                    for await (const doc of cursor) {
+                        console.log(`FOUND: ${doc.filename}`);
+                    }
                 });
             }else{
                 res.render("index", { userLoggedIn: false });
@@ -116,7 +122,7 @@ app.get("/signout", (req, res) => {
 })
 
 app.post("/upload", upload.array("files"), (req, res) => {
-    req.files.forEach(file => console.log(file));
+    req.files.forEach(file => console.log(`UPLOAD: ${file.filename}`));
     res.redirect("/");
 });
 

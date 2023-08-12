@@ -36,7 +36,7 @@ sudo pacman -S nodejs npm
 
 Install the npm pakages:  
 ```
-npm install
+npm install --legacy-peer-deps
 ```
 
 Install mongodb-compass for a graphical user interface for managing the database  
