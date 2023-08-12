@@ -59,7 +59,6 @@ module.exports =
         url: "mongodb://localhost:27017/HomeDrive",
         file: (req, file) => {
             return new Promise((resolve, reject) => {
-                const date = new Date();
                 const newFilename = `${file.originalname}_${Date.now()}`;
                 const id = new ObjectId();
                 if(req.cookies.login){
