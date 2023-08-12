@@ -65,6 +65,7 @@ module.exports =
                     findUser(req.cookies.login.username).then(user => {
                         if(user.password === req.cookies.login.password){
                             dbConnection.collection("users").updateOne({ username: user.username }, { $push: { ownsFiles: id } });
+                            console.log(`\nID: ${id}`);
                         }else{
                             reject("Incorrect password");
                         }
