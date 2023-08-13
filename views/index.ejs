@@ -34,11 +34,11 @@
                 <% usersFiles.forEach(file => { %>
                     <div class="file">
                         <div style="margin-left: 10px;">
-                            <form action="/getfile/<%= file %>">
-                                <p><%= file %></p>
+                            <form action="/getfile/<%= file.filename %>">
+                                <p><%= file.originname %></p>
                                 <button type="submit">Download</button>
                             </form>
-                            <form action="/deletefile/<%= file %>">
+                            <form action="/deletefile/<%= file.filename %>">
                                 <button type="submit">Delete</button>
                             </form>
                         </div>

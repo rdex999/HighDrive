@@ -156,7 +156,8 @@ app.get("/deletefile/:filename", (req, res) => {
                 for await (const doc of cursor) {
                     console.log(`\nDeleting file: "${doc.filename}"\nFrom user: "${user.username}"`);
                     gfs.delete(doc._id);
-                    database.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: doc.filename } })
+                    // Delete the array element where filename == doc.filename
+                    database.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: { filename: doc.filename } } })
                     .then(() => res.redirect("/"))
                     .catch(err => {
                         console.log(err);
