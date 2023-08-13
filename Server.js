@@ -134,7 +134,8 @@ app.get("/getfile/:filename", (req, res) => {
                 res.clearCookie("login").redirect("/");
             }
         }).catch(err => {
-            res.status(500).redirect("/");
+            console.log(err);
+            res.status(500).clearCookie("login").redirect("/");
         });
     }
 });

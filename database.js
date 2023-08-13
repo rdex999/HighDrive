@@ -60,7 +60,6 @@ module.exports =
         file: (req, file) => {
             return new Promise((resolve, reject) => {
                 const newFilename = `${file.originalname}_${Date.now()}`;
-                const id = new ObjectId();
                 if(req.cookies.login){
                     findUser(req.cookies.login.username).then(user => {
                         if(user && user.password === req.cookies.login.password){
@@ -78,7 +77,6 @@ module.exports =
                 const fileInfo = {
                     filename: newFilename,
                     bucketName: "uploads",
-                    _id: id
                 };
                 resolve(fileInfo);
             });
