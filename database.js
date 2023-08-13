@@ -1,6 +1,7 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const multerGridfs = require("multer-gridfs-storage");
 const crypto = require("crypto");
+const { resolve } = require("path");
 
 let dbConnection;
 
@@ -13,6 +14,25 @@ const findUser = usrname => {
         }).catch(err => {
             reject(err);
         });
+    });
+}
+
+const createCookieId = () => {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, buf) => {
+            if(err){reject(err);}else{
+                resolve(`${buf.toString("hex")}${Date.now()}`);
+            }
+        });
+    });
+}
+
+const findUserByCookie = cookieValue => {
+    return new Promise((resolve, reject) => {
+        dbConnection.collection("users")
+        .findOne({ cookieId: cookieValue })
+        .then(user => resolve(user))
+        .catch(err => reject(err))
     });
 }
 
@@ -47,7 +67,8 @@ module.exports =
         .insertOne({
             username: usrname,
             password: passwd,
-            ownsFiles: []
+            ownsFiles: [],
+            cookieId: ""
         }).then(result => {
             return callback(result);
         });
@@ -81,6 +102,11 @@ module.exports =
                 resolve(fileInfo);
             });
         }
-    })
+    }),
+
+    findUserByCookie,
+
+    createCookieId
+
 }
 

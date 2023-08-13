@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, userExist, createUser, findUser, storage} = require("./database.js");
+const { connectToDb, userExist, createUser, findUser, storage, createCookieId, findUserByCookie } = require("./database.js");
 const { exit } = require("process");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -102,8 +102,15 @@ app.post("/login", (req, res) => {
     findUser(req.body.username)
     .then(user => {
         if(user && req.body.password === user.password){
-            res.cookie("login", { username: user.username, password: user.password }, { maxAge: 1*24*60*60*1000 });
-            res.render("login", { loginState: 1 });
+            createCookieId().then(newId => {
+                res.cookie("login", newId, { maxAge: 1*24*60*60*1000 });
+                database.collection("users").updateOne({ username: user.username }, { $set: { cookieId: newId } });
+                res.render("login", { loginState: 1 });
+            }).catch(err => {
+                console.log(`ERROR: ${err}`);
+                res.status(500).redirect("/");
+            });
+            
         }else{
             res.render("login", { loginState: 2 });
         }
