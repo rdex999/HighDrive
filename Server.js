@@ -53,12 +53,12 @@ app.use((req, res, next) => {
 
 app.get("/", (req, res) => {
     if(req.cookies.login){ 
-        findUser(req.cookies.login.username)
+        findUserByCookie(req.cookies.login)
         .then(user => { 
-            if(user && req.cookies.login.password === user.password){ 
+            if(user){ 
                 res.render("index", {
                     userLoggedIn: true,
-                    username: req.cookies.login.username,
+                    username: user.username,
                     usersFiles: user.ownsFiles
                 });
             }else{
@@ -66,6 +66,7 @@ app.get("/", (req, res) => {
             }
         }).catch(err => {
             console.log(err)
+            res.status(500).clearCookie("login").redirect("/");
         });
     }else{
         res.render("index", { userLoggedIn: false });
@@ -131,8 +132,8 @@ app.post("/upload", upload.array("files"), (req, res) => {
 
 app.get("/getfile/:filename", (req, res) => {
     if(req.cookies.login && req.params.filename){
-        findUser(req.cookies.login.username).then(user => {
-            if(user && user.password === req.cookies.login.password){
+        findUserByCookie(req.cookies.login).then(user => {
+            if(user){
                 console.log(`\nSending file: "${req.params.filename}"\nTo user: "${user.username}"`) 
                 res.setHeader("content-type", "some/type");
                 gfs.openDownloadStreamByName(req.params.filename)
@@ -149,8 +150,8 @@ app.get("/getfile/:filename", (req, res) => {
 
 app.get("/deletefile/:filename", (req, res) => {
     if(req.cookies.login && req.params.filename){
-        findUser(req.cookies.login.username).then(async user => {
-            if(user && user.password === req.cookies.login.password){
+        findUserByCookie(req.cookies.login).then(async user => {
+            if(user){
                 const cursor = gfs.find({ filename: req.params.filename });
                 for await (const doc of cursor) {
                     console.log(`\nDeleting file: "${doc.filename}"\nFrom user: "${user.username}"`);

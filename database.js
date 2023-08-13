@@ -82,8 +82,8 @@ module.exports =
             return new Promise((resolve, reject) => {
                 const newFilename = `${file.originalname}_${Date.now()}`;
                 if(req.cookies.login){
-                    findUser(req.cookies.login.username).then(user => {
-                        if(user && user.password === req.cookies.login.password){
+                    findUserByCookie(req.cookies.login).then(user => {
+                        if(user){
                             dbConnection.collection("users").updateOne({ username: user.username }, { $push: { ownsFiles: newFilename } });
                             console.log(`\nID: ${id}`);
                         }else{
@@ -107,6 +107,5 @@ module.exports =
     findUserByCookie,
 
     createCookieId
-
 }
 
