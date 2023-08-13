@@ -25,11 +25,18 @@
         <% if(loginState === 1){ %>
             <br> 
             <div class="SignUpSuccess">
-                <p>Logged in successfully!</p>
-                <p>You can now browse your files if the home page.</p>
+                <div style="margin-left: 10px;">
+                    <p>Logged in successfully!</p>
+                    <p>You can now browse your files if the home page.</p>
+                </div>
             </div>
         <% }else if(loginState === 2){ %>
-            <p class="SignUpError">Incorrect user name or password.</p>
+            <br> 
+            <div class="SignUpError">
+                <div style="margin-left: 10px;">
+                    <p>Incorrect user name or password.</p>
+                </div>
+            </div>
         <% }else if(loginState === 0){ %>
         <% } %>
 

@@ -26,11 +26,20 @@
         <% if(SignUpState == 1){ %>
             <br> 
             <div class="SignUpSuccess">
-                <p>Created your account successfully!</p>
-                <p>You can now log in to your new account.</p>
+                <div style="margin-left: 10px;">
+                    <p>Created your account successfully!</p>
+                    <p>You can now log in to your new account.</p>
+                </div>
+                
             </div>
         <% }else if(SignUpState == 2){ %>
-            <p class="SignUpError">User: <%= username %> already exists.</p>
+            <br> 
+            <div class="SignUpError">
+                <div style="margin-left: 10px;">
+                    <p>User: <%= username %> already exists.</p>
+                </div>
+            </div>
+            
         <% }else{ %>
 
         <% } %>
