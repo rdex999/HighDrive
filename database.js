@@ -1,7 +1,8 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const multerGridfs = require("multer-gridfs-storage");
 const crypto = require("crypto");
-const { resolve } = require("path");
+
+const connectionString = "mongodb://127.0.0.1:27017/HomeDrive";
 
 let dbConnection;
 
@@ -40,7 +41,7 @@ module.exports =
 {
     connectToDb: () => {
         return new Promise((resolve, reject) => {
-            MongoClient.connect("mongodb://localhost:27017/HomeDrive")
+            MongoClient.connect(connectionString)
             .then(res => {
                 dbConnection = res.db();
                 resolve(dbConnection);
@@ -77,7 +78,7 @@ module.exports =
     findUser, 
 
     storage: new multerGridfs.GridFsStorage({
-        url: "mongodb://localhost:27017/HomeDrive",
+        url: connectionString,
         file: (req, file) => {
             return new Promise((resolve, reject) => {
                 const newFilename = `${file.originalname}_${Date.now()}`;
