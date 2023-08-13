@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const multerGridfs = require("multer-gridfs-storage");
 const { MongoClient, GridFSBucket} = require("mongodb");
+const fs = require("fs");
 
 const upload = multer({ storage });
 
@@ -55,15 +56,16 @@ app.get("/", (req, res) => {
         findUser(req.cookies.login.username)
         .then(user => { 
             if(req.cookies.login.password === user.password){ 
+                //user.ownsFiles.forEach(async userFilename => {
+                //    const cursor = gfs.find({ filename: userFilename });
+                //    for await (const doc of cursor) {
+                //        console.log(`FOUND: ${doc.filename}`);
+                //    }
+                //});
                 res.render("index", {
                     userLoggedIn: true,
-                    username: req.cookies.login.username
-                });
-                user.ownsFiles.forEach(async userFilename => {
-                    const cursor = gfs.find({ filename: userFilename });
-                    for await (const doc of cursor) {
-                        console.log(`FOUND: ${doc.filename}`);
-                    }
+                    username: req.cookies.login.username,
+                    usersFiles: user.ownsFiles
                 });
             }else{
                 res.render("index", { userLoggedIn: false });
@@ -124,6 +126,21 @@ app.get("/signout", (req, res) => {
 app.post("/upload", upload.array("files"), (req, res) => {
     req.files.forEach(file => console.log(`UPLOAD: ${file.filename}`));
     res.redirect("/");
+});
+
+app.get("/getfile/:filename", (req, res) => {
+    console.log(req.params.filename, req.cookies);
+    if(req.cookies.login){
+        findUser(req.cookies.login.username).then(user => {
+            if(user.password === req.cookies.login.password){
+                res.setHeader("content-type", "some/type");
+                gfs.openDownloadStreamByName(req.params.filename)
+                .pipe(res);
+            }
+        }).catch(err => {
+            res.status(500).redirect("/");
+        });
+    }
 });
 
 app.use((req, res) => {

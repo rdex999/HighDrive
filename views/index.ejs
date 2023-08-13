@@ -28,8 +28,18 @@
                     <input type="submit">
                 </form>
             </div>
-            
+            <div>
+                <br>
+                <h3>Your files:</h3>
+                <% usersFiles.forEach(file => { %>
+                    <div style="margin: 15px;">
+                        <form action="/getfile/<%= file %>">
+                            <button type="submit">Download</button>
+                            <label style="margin-left: 10px;" for="<%= file %>"><%= file %></label>
+                        </form>
+                    </div>
+                <% }); %>
+            </div>
         <% } %>
-
     </body>
 </html>
