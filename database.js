@@ -81,7 +81,7 @@ module.exports =
         url: connectionString,
         file: (req, file) => {
             return new Promise((resolve, reject) => {
-                const newFilename = `${file.originalname}_${Date.now()}`;
+                const newFilename = `${Date.now()}_${file.originalname}`;
                 if(req.cookies.login){
                     findUserByCookie(req.cookies.login).then(user => {
                         if(user){
