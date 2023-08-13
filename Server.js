@@ -55,13 +55,7 @@ app.get("/", (req, res) => {
     if(req.cookies.login){ 
         findUser(req.cookies.login.username)
         .then(user => { 
-            if(req.cookies.login.password === user.password){ 
-                //user.ownsFiles.forEach(async userFilename => {
-                //    const cursor = gfs.find({ filename: userFilename });
-                //    for await (const doc of cursor) {
-                //        console.log(`FOUND: ${doc.filename}`);
-                //    }
-                //});
+            if(user && req.cookies.login.password === user.password){ 
                 res.render("index", {
                     userLoggedIn: true,
                     username: req.cookies.login.username,
@@ -92,7 +86,7 @@ app.post("/SignUp", (req, res) => {
         }else{
             createUser(req.body.username, req.body.password, result => {
                 res.render("SignUp", { SignUpState: 1});
-            })
+            });
         }
     });
 });
@@ -129,16 +123,41 @@ app.post("/upload", upload.array("files"), (req, res) => {
 });
 
 app.get("/getfile/:filename", (req, res) => {
-    console.log(req.params.filename, req.cookies);
-    if(req.cookies.login){
+    if(req.cookies.login && req.params.filename){
         findUser(req.cookies.login.username).then(user => {
-            if(user.password === req.cookies.login.password){
+            if(user && user.password === req.cookies.login.password){
+                console.log(`\nSending file: "${req.params.filename}"\nTo user: "${user.username}"`) 
                 res.setHeader("content-type", "some/type");
                 gfs.openDownloadStreamByName(req.params.filename)
                 .pipe(res);
+            }else{
+                res.clearCookie("login").redirect("/");
             }
         }).catch(err => {
             res.status(500).redirect("/");
+        });
+    }
+});
+
+app.get("/deletefile/:filename", (req, res) => {
+    if(req.cookies.login && req.params.filename){
+        findUser(req.cookies.login.username).then(async user => {
+            if(user && user.password === req.cookies.login.password){
+                const cursor = gfs.find({ filename: req.params.filename });
+                for await (const doc of cursor) {
+                    console.log(`\nDeleting file: "${doc.filename}"\nFrom user: "${user.username}"`);
+                    gfs.delete(doc._id);
+                    database.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: doc.filename } })
+                    .then(() => res.redirect("/"))
+                    .catch(err => {
+                        console.log(err);
+                        res.status(500).clearCookie("login").redirect("/");
+                    });
+                }
+            }
+        }).catch(err => {
+            res.status(500).clearCookie("login").redirect("/");
+            console.log(err);
         });
     }
 });

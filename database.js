@@ -63,7 +63,7 @@ module.exports =
                 const id = new ObjectId();
                 if(req.cookies.login){
                     findUser(req.cookies.login.username).then(user => {
-                        if(user.password === req.cookies.login.password){
+                        if(user && user.password === req.cookies.login.password){
                             dbConnection.collection("users").updateOne({ username: user.username }, { $push: { ownsFiles: newFilename } });
                             console.log(`\nID: ${id}`);
                         }else{

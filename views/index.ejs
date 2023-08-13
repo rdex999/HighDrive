@@ -32,11 +32,16 @@
                 <br>
                 <h3>Your files:</h3>
                 <% usersFiles.forEach(file => { %>
-                    <div style="margin: 15px;">
-                        <form action="/getfile/<%= file %>">
-                            <button type="submit">Download</button>
-                            <label style="margin-left: 10px;" for="<%= file %>"><%= file %></label>
-                        </form>
+                    <div class="file">
+                        <div style="margin-left: 10px;">
+                            <form action="/getfile/<%= file %>">
+                                <p><%= file %></p>
+                                <button type="submit">Download</button>
+                            </form>
+                            <form action="/deletefile/<%= file %>">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 <% }); %>
             </div>
