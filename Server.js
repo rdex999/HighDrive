@@ -122,8 +122,15 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/signout", (req, res) => {
-    res.clearCookie("login").redirect("/");
-})
+    if(req.cookies.login){
+        database.collection("users").updateOne({ cookieId: req.cookies.login }, { $set: { cookieId: "" } })
+        .then(() => res.clearCookie("login").redirect("/"))
+        .catch(err => {
+            console.log(err);
+            res.status(500).clearCookie("login").redirect("/");
+        });
+    }
+});
 
 app.post("/upload", upload.array("files"), (req, res) => {
     req.files.forEach(file => console.log(`UPLOAD: ${file.filename}`));
