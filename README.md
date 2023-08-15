@@ -5,6 +5,8 @@ Writen in Html and Javascript, using Mongodb as the database and Nodejs with Exp
 The server can be accessed on your local network, `http://<ServersIp>:8080`  
 Replace `<ServersIp>` with the servers ip address.  
 
+update: Currently learning react and i will soon make a better frontend with react!
+
 ## Installation instructions
 First install mongodb (depending on your os, this step could be different)  
 example for arch linux:  
