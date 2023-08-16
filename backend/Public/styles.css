@@ -1,0 +1,67 @@
+.title{
+    font-size: 210%;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+.inlineTitle{
+    float: left; 
+    font-size: 210%;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
+#uploadSection{
+    font-weight: bold;
+    border-left: 5px solid red;
+}
+
+a.topSignout{
+    font-size: 180%;
+    color: darkslategray;
+    float: right;
+}
+
+a.topLogin:visited{
+    font-size: 180%;
+    color: darkslategray;
+    float: right;
+    padding: 5px;
+}
+
+a:hover{
+    color: #273D46;
+}
+
+a.topLogin{
+    font-size: 180%;
+    color: darkslategray;
+    float: right;
+    padding: 5px;
+}
+
+.SignUpSuccess{
+    color: chartreuse;
+    border-style: groove;
+    border-color: chartreuse;
+    border-width: 1px;
+}
+
+.SignUpError{
+    color: red;
+    border-style: groove;
+    border-color: red;
+    border-width: 1px;
+}
+
+.file{
+    margin: 15px;
+    border-left: 5px solid #5AFFCE;
+}
+
+.folder{
+    border-left: 5px solid #A1EAFF;
+    margin: 15px;
+}
