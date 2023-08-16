@@ -1,19 +1,41 @@
+import { useState } from "react";
+
 const Signup = () => {
+    const [inputs, setInputs] = useState({});
+    const [error, setError] = useState("");
+    const handleSubmit = event => {
+        event.preventDefault();
+        if(inputs.password === inputs.password2){
+            setError("");
+            // send a request to the api to create a user
+            
+
+        }else{
+            //display error
+            setError(<p className="border border-danger text-danger">Passwords do not match</p>);
+        }
+    };
+
+    const handleChange = event => {
+        setInputs(values => ({ ...values, [event.target.name]: event.target.value }));
+    };
+
     return (
-        <div className="container mt-5">
+        <div className="container pt-5 my-5">
             <div className="row">
               <div className="col-sm-4">
               </div>
               <div className="col-sm-4 text-center container p-5 my-4 border bg-light">
                 <h3>Create account</h3>
-                <form>
+                <form onSubmit={e => handleSubmit(e)}>
                     <br /><br /> 
                     <label>User name: </label>
-                    <input type="text" name="username"/><br /><br /><br />
+                    <input type="text" value={inputs.username || ""} name="username" required onChange={handleChange}/><br /><br /><br />
                     <label>Password: </label>
-                    <input type="password" name="password" /><br /><br /><br />
+                    <input type="password" value={inputs.password || ""} name="password" required onChange={handleChange}/><br /><br /><br />
                     <label>Repeat password: </label>
-                    <input type="password" name="password2"/><br /><br /><br />
+                    <input type="password" value={inputs.password2 || ""} name="password2" required onChange={handleChange}/><br /><br /><br />
+                    {error}
                     <button className="btn btn-light btn-lg" type="submit">Create account</button>
                 </form>
               </div>
