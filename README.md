@@ -1,4 +1,4 @@
-# HomeDrive
+# HighDrive
 A "cloud" drive on your local network that you can sign in to using a user-name and a password to store files.  
 Writen in Html and Javascript, using Mongodb as the database and Nodejs with Express for the server, and ejs as the view engine.  
   
@@ -22,12 +22,12 @@ sudo systemctl enable --now mongodb
 
 Clone the repo:  
 ```
-git clone https://github.com/rdex999/HomeDrive.git
+git clone https://github.com/rdex999/HighDrive.git
 ```
 
-Cd into the HomeDrive directory  
+Cd into the HighDrive directory  
 ```
-cd HomeDrive
+cd HighDrive
 ```
 
 Install npm and nodejs (again, this may be different depending on your os.)  
@@ -50,7 +50,7 @@ yay -S mongodb-compass
 
 Launch mongodb-compass and click on connect,  
 in the left panel click on the plus (+) icon,  
-under "Database Name" type exactly: "HomeDrive",  
+under "Database Name" type exactly: "HighDrive",  
 under "Collection Name" type exacly: "users",  
 click on "Create Database".  
 
