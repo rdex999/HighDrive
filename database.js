@@ -2,7 +2,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const multerGridfs = require("multer-gridfs-storage");
 const crypto = require("crypto");
 
-const connectionString = "mongodb://127.0.0.1:27017/HomeDrive";
+const connectionString = "mongodb://127.0.0.1:27017/HighDrive";
 
 let dbConnection;
 
