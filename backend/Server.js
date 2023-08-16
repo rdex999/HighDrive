@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const upload = multer({ storage });
 
-//let gfs;
+let gfs;
 
 // Create app
 const app = express();
@@ -27,16 +27,13 @@ connectToDb().then(res => {
     exit(1);
 });
 
-// Set view engine
-app.set("view engine", "ejs");
-
 // Listen on port 8080
 app.listen(8080, () => {
     console.log("\nStarting server on port 8080.\n");
 });
 
-// Make everything in the "Public" folder available from the browser (a stylesheet.css file for example)
-app.use(express.static("Public"));
+// Make everything in the "dist" folder available from the browser (a stylesheet.css file for example)
+app.use(express.static("./../frontend/dist"));
 
 // Make json available (from post requests and stf)
 app.use(express.json());
@@ -52,41 +49,45 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-    if(req.cookies.login){ 
-        findUserByCookie(req.cookies.login)
-        .then(user => { 
-            if(user){ 
-                res.render("index", {
-                    userLoggedIn: true,
-                    username: user.username,
-                    usersFiles: user.ownsFiles
-                });
-            }else{
-                res.render("index", { userLoggedIn: false });
-            }
-        }).catch(err => {
-            console.log(err)
-            res.status(500).clearCookie("login").redirect("/");
-        });
-    }else{
-        res.render("index", { userLoggedIn: false });
-    }
+    res.sendFile("../frontend/dist/index.html", { root: __dirname });
+    console.log("got request");
 });
+
+//app.get("/", (req, res) => {
+//    if(req.cookies.login){ 
+//        findUserByCookie(req.cookies.login)
+//        .then(user => { 
+//            if(user){ 
+//                res.render("index", {
+//                    userLoggedIn: true,
+//                    username: user.username,
+//                    usersFiles: user.ownsFiles
+//                });
+//            }else{
+//                res.render("index", { userLoggedIn: false });
+//            }
+//        }).catch(err => {
+//            console.log(err)
+//            res.status(500).clearCookie("login").redirect("/");
+//        });
+//    }else{
+//        res.render("index", { userLoggedIn: false });
+//    }
+//});
 
 // Sign up state 0: user didnt try to sign up
 // Sign up state 1: user sign up successfully
 // Sign up state 2: user tryed to sign up with an existing username in database
 app.get("/SignUp", (req, res) => { 
-    res.render("SignUp", {SignUpState: 0});
 });
 
-app.post("/SignUp", (req, res) => {
+app.post("/api/signup", (req, res) => {
     userExist(req.body.username, result => {
         if(result){
-            res.render("SignUp", { SignUpState: 2, username: req.body.username});
+            res.json({ username: req.body.username, state: 2 });
         }else{
             createUser(req.body.username, req.body.password, result => {
-                res.render("SignUp", { SignUpState: 1});
+                res.json({ username: req.body.username, state: 1 });
             });
         }
     });
@@ -96,7 +97,6 @@ app.post("/SignUp", (req, res) => {
 // loginState 1: user logged in successfully
 // loginState 2: user tryed to log in with an incorrect username of password
 app.get("/login", (req, res) => {
-    res.render("login", { loginState: 0 });
 });
 
 app.post("/login", (req, res) => {
@@ -106,14 +106,14 @@ app.post("/login", (req, res) => {
             createCookieId().then(newId => {
                 res.cookie("login", newId, { maxAge: 1*24*60*60*1000 });
                 database.collection("users").updateOne({ username: user.username }, { $set: { cookieId: newId } });
-                res.render("login", { loginState: 1 });
+                //res.render("login", { loginState: 1 });
             }).catch(err => {
                 console.log(`ERROR: ${err}`);
                 res.status(500).redirect("/");
             });
             
         }else{
-            res.render("login", { loginState: 2 });
+            //res.render("login", { loginState: 2 });
         }
     }).catch(err => {
         console.log(err)

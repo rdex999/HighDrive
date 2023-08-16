@@ -8,8 +8,19 @@ const Signup = () => {
         if(inputs.password === inputs.password2){
             setError("");
             // send a request to the api to create a user
-            
-
+            fetch("/api/signup", {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: inputs.username,
+                    password: inputs.password
+                })
+            }).then(res => res.json().then(data => {
+                console.log(data);
+            })).catch(err => console.error(err));
         }else{
             //display error
             setError(<p className="border border-danger text-danger">Passwords do not match</p>);
