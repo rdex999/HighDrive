@@ -44,7 +44,7 @@ const Home = () => {
             <div className="container pt-2 my-5 border">
                 <h3>Your files:</h3>
                 <br /> 
-                    {
+                    { username &&
                         files.map(newFile => {
                             return (
                                 <File file={newFile} deletefile={deleteFile}/>
