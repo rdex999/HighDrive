@@ -9,7 +9,9 @@ Replace `<ServersIp>` with the servers ip address.
 First install mongodb (depending on your os, this step could be different)  
 example for arch linux:  
 ```
-sudo pacman -S yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
 yay -S mongodb-bin
 ```
 Then enable and start the mongodb service (again, this may be different depending on your os.)  
