@@ -26,32 +26,36 @@ const Home = () => {
     const handleChange = event => {
         uploadFilesForm.current.submit();
     };
-
+    
     return (
         <div className="container-fluid">
-            {username && <h2>Welcome to High Drive, {username}</h2>}
-            {username && 
-            <div>
-                <br />
-                <form encType="multipart/form-data" action="/api/upload" method="post" ref={uploadFilesForm} onChange={handleChange}>
-                    <div class="mb-3">
-                        <label className="fs-3" htmlFor="files">Upload files:</label>
-                        <input class="form-control" style={{ maxWidth: "17%" }} name="files" type="file" id="formFileMultiple" multiple/>
-                    </div> 
-                </form>
-            </div>
+            {username &&
+                <div>
+                    <h2>Welcome to High Drive, {username}</h2>
+                    <button className="btn btn-outline-dark" onClick={() => {fetch("/api/signout"); setUsername(null) }}>Sign out</button> 
+                    <br /><br />
+                    <form encType="multipart/form-data" action="/api/upload" method="post" ref={uploadFilesForm} onChange={handleChange}>
+                        <div class="mb-3">
+                            <label className="fs-3" htmlFor="files">Upload files:</label>
+                            <input class="form-control" style={{ maxWidth: "17%" }} name="files" type="file" id="formFileMultiple" multiple/>
+                        </div> 
+                    </form>
+                    <div className="container pt-2 my-5 ">
+                        <h3>Your files:</h3>
+                        <div className="container"> 
+                            <br /> 
+                            { 
+                                files.map(newFile => {
+                                    return (
+                                        <File file={newFile} deletefile={deleteFile}/>
+                                    );
+                                })
+                            }
+                        <br /> 
+                        </div>
+                    </div>
+                </div>
             }
-            <div className="container pt-2 my-5 border">
-                <h3>Your files:</h3>
-                <br /> 
-                    { username &&
-                        files.map(newFile => {
-                            return (
-                                <File file={newFile} deletefile={deleteFile}/>
-                            );
-                        })
-                    } 
-            </div>
         </div>
              
     );
