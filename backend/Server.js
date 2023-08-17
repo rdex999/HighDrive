@@ -4,7 +4,7 @@ const { exit } = require("process");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const multerGridfs = require("multer-gridfs-storage");
-const { MongoClient, GridFSBucket} = require("mongodb");
+const { GridFSBucket } = require("mongodb");
 const fs = require("fs");
 
 const upload = multer({ storage });
@@ -33,7 +33,7 @@ app.listen(8080, () => {
 });
 
 // Make everything in the "dist" folder available from the browser (a stylesheet.css file for example)
-app.use(express.static("./../frontend/dist"));
+app.use(express.static("./dist"));
 
 // Make json available (from post requests and stf)
 app.use(express.json());
@@ -48,39 +48,34 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/", (req, res) => {
-    res.sendFile("../frontend/dist/index.html", { root: __dirname });
-    console.log("got request");
+// state 0: no login cookie (user didnt log in)
+// state 1: user logged in successfully (has a valid login cookie) 
+// state 2: user has an invalid login cookie
+app.get("/api/listfiles", (req, res) => {
+    if(req.cookies.login){
+        findUserByCookie(req.cookies.login)
+        .then(user => {
+            if(user){
+                res.json({ 
+                    username: user.username,
+                    state: 1,
+                    files: user.ownsFiles
+                });
+            }else{
+                res.clearCookie("login").json({ state: 2 });
+            }
+        }).catch(err => {
+            console.log(err);
+            res.clearCookie("login").json({ state: 2 });
+        });
+    }else{
+        res.json({ state: 0 });
+    }
 });
 
-//app.get("/", (req, res) => {
-//    if(req.cookies.login){ 
-//        findUserByCookie(req.cookies.login)
-//        .then(user => { 
-//            if(user){ 
-//                res.render("index", {
-//                    userLoggedIn: true,
-//                    username: user.username,
-//                    usersFiles: user.ownsFiles
-//                });
-//            }else{
-//                res.render("index", { userLoggedIn: false });
-//            }
-//        }).catch(err => {
-//            console.log(err)
-//            res.status(500).clearCookie("login").redirect("/");
-//        });
-//    }else{
-//        res.render("index", { userLoggedIn: false });
-//    }
-//});
-
-// Sign up state 0: user didnt try to sign up
-// Sign up state 1: user sign up successfully
-// Sign up state 2: user tryed to sign up with an existing username in database
-app.get("/SignUp", (req, res) => { 
-});
-
+// state 0: user didnt try to sign up
+// state 1: user sign up successfully
+// state 2: user tryed to sign up with an existing username in database
 app.post("/api/signup", (req, res) => {
     userExist(req.body.username, result => {
         if(result){
@@ -93,13 +88,10 @@ app.post("/api/signup", (req, res) => {
     });
 });
 
-// loginState 0: user didnt try to log in
-// loginState 1: user logged in successfully
-// loginState 2: user tryed to log in with an incorrect username of password
-app.get("/login", (req, res) => {
-});
-
-app.post("/login", (req, res) => {
+// state 0: user didnt try to log in
+// state 1: user logged in successfully
+// state 2: user tryed to log in with an incorrect username of password
+app.post("/api/login", (req, res) => {
     findUser(req.body.username)
     .then(user => {
         if(user && req.body.password === user.password){
@@ -107,13 +99,15 @@ app.post("/login", (req, res) => {
                 res.cookie("login", newId, { maxAge: 1*24*60*60*1000 });
                 database.collection("users").updateOne({ username: user.username }, { $set: { cookieId: newId } });
                 //res.render("login", { loginState: 1 });
+                res.json({ username: user.username, state: 1 });
             }).catch(err => {
                 console.log(`ERROR: ${err}`);
-                res.status(500).redirect("/");
+                res.json({ state: 2 });
             });
             
         }else{
             //res.render("login", { loginState: 2 });
+            res.json({ state: 2 });
         }
     }).catch(err => {
         console.log(err)
@@ -121,7 +115,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.get("/signout", (req, res) => {
+app.get("/api/signout", (req, res) => {
     if(req.cookies.login){
         database.collection("users").updateOne({ cookieId: req.cookies.login }, { $set: { cookieId: "" } })
         .then(() => res.clearCookie("login").redirect("/"))
@@ -132,12 +126,12 @@ app.get("/signout", (req, res) => {
     }
 });
 
-app.post("/upload", upload.array("files"), (req, res) => {
+app.post("/api/upload", upload.array("files"), (req, res) => {
     req.files.forEach(file => console.log(`UPLOAD: ${file.filename}`));
     res.redirect("/");
 });
 
-app.get("/getfile/:filename", (req, res) => {
+app.get("/api/getfile/:filename", (req, res) => {
     if(req.cookies.login && req.params.filename){
         findUserByCookie(req.cookies.login).then(user => {
             if(user){
@@ -155,7 +149,7 @@ app.get("/getfile/:filename", (req, res) => {
     }
 });
 
-app.get("/deletefile/:filename", (req, res) => {
+app.get("/api/deletefile/:filename", (req, res) => {
     if(req.cookies.login && req.params.filename){
         findUserByCookie(req.cookies.login).then(async user => {
             if(user){
@@ -180,5 +174,5 @@ app.get("/deletefile/:filename", (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(404).render("404");
+    res.status(404).json({ error: 404 });
 });
