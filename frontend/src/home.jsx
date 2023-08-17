@@ -19,9 +19,14 @@ const Home = () => {
         <div className="container-fluid">
             {username && <h2>Welcome to High Drive, {username}</h2>}
             {username && 
-            <form encType="multipart/form-data" action="/api/upload" method="post" ref={uploadFilesForm} onChange={handleChange}>
-                <input type="file" name="files" multiple/>
-            </form>    
+            <div>
+                <br />
+                <form encType="multipart/form-data" action="/api/upload" method="post" ref={uploadFilesForm} onChange={handleChange}>
+                    <div class="mb-3">
+                        <input class="form-control" style={{ maxWidth: "17%" }} type="file" id="formFileMultiple" multiple/>
+                    </div> 
+                </form>    
+            </div>
             } 
             <div className="container pt-5 my-5 border">
             

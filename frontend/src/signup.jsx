@@ -19,7 +19,11 @@ const Signup = () => {
                     password: inputs.password
                 })
             }).then(res => res.json().then(data => {
-                console.log(data);
+                if(data.state === 1){
+                    setError(<p className="border border-success text-success">Created your account successfuly!</p>);
+                }else if(data.state === 2){
+                    setError(<p className="border border-danger text-danger">User {data.username} already exists</p>);
+                }
             })).catch(err => console.error(err));
         }else{
             //display error
@@ -40,13 +44,11 @@ const Signup = () => {
                 <h3>Create account</h3>
                 <form onSubmit={e => handleSubmit(e)}>
                     <br /><br /> 
-                    <label>User name: </label>
-                    <input type="text" value={inputs.username || ""} name="username" required onChange={handleChange}/><br /><br /><br />
-                    <label>Password: </label>
-                    <input type="password" value={inputs.password || ""} name="password" required onChange={handleChange}/><br /><br /><br />
-                    <label>Repeat password: </label>
-                    <input type="password" value={inputs.password2 || ""} name="password2" required onChange={handleChange}/><br /><br /><br />
+                    <input placeholder="User name" className="form-control" type="text" value={inputs.username || ""} name="username" required onChange={handleChange}/><br /><br />
+                    <input placeholder="Password" className="form-control" type="password" value={inputs.password || ""} name="password" required onChange={handleChange}/><br /><br />
+                    <input placeholder="Repeat password" className="form-control" type="password" value={inputs.password2 || ""} name="password2" required onChange={handleChange}/><br /><br />
                     {error}
+                    <br />
                     <button className="btn btn-light btn-lg" type="submit">Create account</button>
                 </form>
               </div>

@@ -19,7 +19,7 @@ const Login = () => {
         }).then(res => res.json().then(data => {
             // if user logged in successfully 
             if(data.state === 1){
-                setLoginMessage(<p className="text-success border border-success">Logged in successfully, you can browse you files in the home page.</p>);
+                setLoginMessage(<p className="text-success border border-success">Logged in successfully, you can browse your files in the home page.</p>);
             }else if(data.state === 2){
                 setLoginMessage(<p className="text-danger border border-danger">Incorrect user name or password.</p>);
             }
@@ -39,10 +39,10 @@ const Login = () => {
                 <h3>Log in to your account</h3>
                 <form onSubmit={handleSubmit}>
                     <br /><br /> 
-                    <label>User name: </label>
-                    <input value={inputs.username || ""} onChange={handleChange} type="text" name="username" required/><br /><br /><br />
-                    <label>Password: </label>
-                    <input value={inputs.password || ""} onChange={handleChange} type="password" name="password" required/><br /><br /><br />
+                    <div>
+                        <input placeholder="User name" className="form-control" value={inputs.username || ""} onChange={handleChange} type="text" name="username" required/><br/><br />
+                        <input placeholder="Password" className="form-control" value={inputs.password || ""} onChange={handleChange} type="password" name="password" required/><br /><br /><br />
+                    </div> 
                     {loginMessage} 
                     <button className="btn btn-light btn-lg" type="submit">Login</button>
                 </form>
