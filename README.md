@@ -1,11 +1,9 @@
 # HighDrive
 A "cloud" drive on your local network that you can sign in to using a user-name and a password to store files.  
-Writen in Html and Javascript, using Mongodb as the database and Nodejs with Express for the server, and ejs as the view engine.  
+I used Nodejs for the server, Express for the api, Mongodb for the database, React for the frontend framework, and bootstrap for styling.  
   
 The server can be accessed on your local network, `http://<ServersIp>:8080`  
 Replace `<ServersIp>` with the servers ip address.  
-
-update: Currently learning react and i will soon make a better frontend with react!
 
 ## Installation instructions
 First install mongodb (depending on your os, this step could be different)  
@@ -25,9 +23,9 @@ Clone the repo:
 git clone https://github.com/rdex999/HighDrive.git
 ```
 
-Cd into the HighDrive directory  
+Cd into the HighDrive/backend directory  
 ```
-cd HighDrive
+cd HighDrive/backend
 ```
 
 Install npm and nodejs (again, this may be different depending on your os.)  
@@ -36,9 +34,24 @@ example for arch linux:
 sudo pacman -S nodejs npm
 ```
 
-Install the npm pakages:  
+Install the npm pakages for the server:  
 ```
 npm install
+```
+
+Cd to the frontend directory:
+```
+cd ../frontend
+```
+
+Install the npm packages for the frontend:
+```
+npm install
+```
+
+Cd again into the backend directory:
+```
+cd ../backend
 ```
 
 Install mongodb-compass for a graphical user interface for managing the database  
