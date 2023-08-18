@@ -6,6 +6,7 @@ import Layout from "./layout";
 import Home from "./home";
 import Signup from "./signup";
 import Login from "./login";
+import NotFound from "./notFound";
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                     <Route index element={<Home />}/>
                     <Route path="signup" element={<Signup />}/>
                     <Route path="login" element={<Login />}/>
+                    <Route path="*" element={<NotFound />}/>
                 </Route>     
             </Routes> 
         </BrowserRouter>     

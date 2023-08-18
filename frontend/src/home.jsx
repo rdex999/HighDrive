@@ -43,14 +43,16 @@ const Home = () => {
                     <div className="container pt-2 my-5 ">
                         <h3>Your files:</h3>
                         <br />
-                        <div className="row gap-4"> 
-                            { 
-                                files.map(newFile => {
-                                    return (
-                                        <File file={newFile} deletefile={deleteFile}/>
-                                    );
-                                })
-                            }
+                        <div className="container">
+                            <div className="row gap-4"> 
+                                { 
+                                    files.map(newFile => {
+                                        return (
+                                            <File file={newFile} deletefile={deleteFile}/>
+                                        );
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -135,7 +135,7 @@ app.get("/api/getfile/:filename", (req, res) => {
     if(req.cookies.login && req.params.filename){
         findUserByCookie(req.cookies.login).then(user => {
             if(user){
-                console.log(`\nSending file: "${req.params.filename}"\nTo user: "${user.username}"`) 
+                console.log(`\nSending file: "${req.params.filename}"\nTo user: "${user.username}"`);
                 res.setHeader("content-type", "some/type");
                 gfs.openDownloadStreamByName(req.params.filename)
                 .pipe(res);
