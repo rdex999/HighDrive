@@ -42,8 +42,8 @@ const Home = () => {
                     </form>
                     <div className="container pt-2 my-5 ">
                         <h3>Your files:</h3>
-                        <div className="container"> 
-                            <br /> 
+                        <br />
+                        <div className="row gap-4"> 
                             { 
                                 files.map(newFile => {
                                     return (
@@ -51,7 +51,6 @@ const Home = () => {
                                     );
                                 })
                             }
-                        <br /> 
                         </div>
                     </div>
                 </div>

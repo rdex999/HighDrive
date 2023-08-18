@@ -9,15 +9,13 @@ const File = props => {
     };
 
     return (
-        <div>
-            <div className="container border me-3 float-start" style={{ width: "25%" }}>
-                <h5>{props.file.originname.substring(0, 30)}</h5>
-                <div className="pt-3 pb-3">
-                    <button className="btn btn-outline-primary me-2" onClick={downloadFile} type="submit">Download</button>
-                    <button className="btn btn-outline-secondary" onClick={() => props.deletefile(props.file.filename)} type="submit">Delete</button>
-                </div>
-            </div>
-        </div> 
+        <div className="col-md-2 border pb-2">
+            <h5>{props.file.originname.substring(0, 30)}</h5>
+            <div className="pt-3">
+                <button className="btn btn-outline-primary me-2" onClick={downloadFile} type="submit">Download</button>
+                <button className="btn btn-outline-secondary" onClick={() => props.deletefile(props.file.filename)} type="submit">Delete</button>
+            </div> 
+        </div>
     );
 };
 
