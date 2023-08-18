@@ -56,6 +56,12 @@ const Home = () => {
                     </div>
                 </div>
             }
+            { !username &&
+                <div>
+                    <br />
+                    <h2>In order to browse your files, you must log in first.</h2>
+                </div>
+            }
         </div>
              
     );
