@@ -136,7 +136,9 @@ app.get("/api/getfile/:filename", (req, res) => {
         findUserByCookie(req.cookies.login).then(user => {
             if(user){
                 console.log(`\nSending file: "${req.params.filename}"\nTo user: "${user.username}"`);
+                const file = user.ownsFiles.filter(usersFile => usersFile.filename === req.params.filename);
                 res.setHeader("content-type", "some/type");
+                res.setHeader("Content-disposition", `attachment; filename=${file[0].originname}`); 
                 gfs.openDownloadStreamByName(req.params.filename)
                 .pipe(res);
             }else{
