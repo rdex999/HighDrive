@@ -201,6 +201,28 @@ app.post("/api/createfolder", (req, res) => {
     }
 });
 
+// state 1: deleted the folder successfully
+app.post("/api/deletefolder", (req, res) => {
+    if(req.cookies.login && req.body.folderName && req.body.path){
+        findUserByCookie(req.cookies.login)
+        .then(user => {
+            if(user){
+                console.log(`\nDeleting folder ${req.body.folderName}\nOn path ${req.body.path}`);
+                database.collection("users").updateOne({ username: user.username },
+                    { $pull: { ownsFiles: { originname: req.body.folderName, path: req.body.path } } });
+                res.json({ state: 1 });
+            }else{
+                res.clearCookie("login").redirect("/");
+            }
+        }).catch(err => {
+            console.log(err);
+            res.clearCookie("login").redirect("/");
+        });
+    }else{
+        res.redirect("/");
+    }
+});
+
 app.use((req, res) => {
     res.status(404).json({ error: 404 });
 });

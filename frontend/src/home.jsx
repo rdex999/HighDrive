@@ -10,20 +10,13 @@ const Home = () => {
     const [createDirMsg, setCreateDirMsg] = useState("");
 
     useEffect(() => {
-        fetch("/api/listfiles").then(res => res.json().then(data => {
-            setUsername(data.username);
-            setFiles(data.files);
-            console.log("use effect executed");
-        })).catch(err => console.log(err));
+        reloadFiles(setUsername, setFiles);
     }, [path]);
 
     const deleteFile = filename => {
         fetch(`/api/deletefile/${filename}`)
         .then(() => {
-            fetch("/api/listfiles").then(res => res.json().then(data => {
-            setUsername(data.username);
-            setFiles(data.files);
-        })).catch(err => console.log(err));
+            reloadFiles(setUsername, setFiles);
         }).catch(err => console.log(err));
     };
 
@@ -41,7 +34,14 @@ const Home = () => {
             distance: 10,
         },
     });
-    const sensors = useSensors(mouseSensor);    
+    const sensors = useSensors(mouseSensor);
+
+    const reloadFiles = (setUsrname, setUsersFiles) => {
+        fetch("/api/listfiles").then(res => res.json().then(data => {
+            setUsrname(data.username);
+            setUsersFiles(data.files);
+        })).catch(err => console.log(err));
+    }
 
     const handleCreateDirSubmit = event => {
         event.preventDefault();
@@ -56,10 +56,7 @@ const Home = () => {
             })
         }).then(res => res.json()).then(jsonData => {
             if(jsonData.state === 1){
-                fetch("/api/listfiles").then(res => res.json().then(data => {
-                    setUsername(data.username);
-                    setFiles(data.files);
-                })).catch(err => console.log(err));
+                reloadFiles(setUsername, setFiles);
                 setCreateDirMsg(
                     <div>
                         <br />
@@ -67,10 +64,7 @@ const Home = () => {
                     </div>
                 );
             }else if(jsonData.state === 0){
-                fetch("/api/listfiles").then(res => res.json().then(data => {
-                    setUsername(data.username);
-                    setFiles(data.files);
-                })).catch(err => console.log(err));
+                reloadFiles(setUsername, setFiles);
                 setCreateDirMsg(
                     <div>
                         <br />
@@ -79,6 +73,23 @@ const Home = () => {
                 );
             }
         })
+    };
+
+    const deleteFolder = (folderName, foldersPath) => {
+        fetch("/api/deleteFolder", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                folderName: folderName,
+                path: foldersPath 
+            })
+        }).then(res => res.json()).then(data => {
+            reloadFiles(setUsername, setFiles);
+            console.log(data);
+        }).catch(err => console.log(err));
     };
 
     return (
@@ -110,7 +121,7 @@ const Home = () => {
                                         files.map(newFile => {
                                             if(newFile.path === path){
                                                 return (
-                                                    <File file={newFile} deletefile={deleteFile} changeDirectory={setPath} path={path}/>
+                                                    <File file={newFile} deletefile={deleteFile} changeDirectory={setPath} path={path} deleteFolder={deleteFolder}/>
                                                 );
                                             }
                                         })
