@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import File from "./file";
+import { DndContext, closestCenter, MouseSensor, useSensor, useSensors} from "@dnd-kit/core";
 
 const Home = () => {
     const [files, setFiles] = useState([]);
@@ -26,7 +27,18 @@ const Home = () => {
     const handleChange = event => {
         uploadFilesForm.current.submit();
     };
-    
+
+    const handleDragEnd = event => {
+        console.log("drag end");
+    };
+   
+    const mouseSensor = useSensor(MouseSensor, {
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+    const sensors = useSensors(mouseSensor);    
+
     return (
         <div className="container-fluid">
             {username &&
@@ -44,6 +56,7 @@ const Home = () => {
                         <h3>Your files:</h3>
                         <br />
                         <div className="container">
+                            <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
                             <div className="row gap-4"> 
                                 { 
                                     files.map(newFile => {
@@ -53,6 +66,7 @@ const Home = () => {
                                     })
                                 }
                             </div>
+                            </DndContext>
                         </div>
                     </div>
                 </div>

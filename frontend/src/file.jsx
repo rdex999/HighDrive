@@ -1,6 +1,17 @@
+import {useDraggable} from "@dnd-kit/core";
+import {CSS} from '@dnd-kit/utilities';
 
 const File = props => {
-    
+
+    const {attributes, listeners, setNodeRef, transform, transition} = useDraggable({
+        id: props.file.filename
+    });
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+        transition
+    }
+
     let imgPath = null;
     switch(props.file.originname.substring(props.file.originname.lastIndexOf(".") + 1)){
         case "pdf":
@@ -26,7 +37,7 @@ const File = props => {
     }
 
     return (
-        <div className="col-md-2 bg-light border border-secondary rounded pb-3">    
+        <div ref={setNodeRef} {...listeners} {...attributes} style={style} className="col-md-2 bg-light border border-secondary rounded pb-3">
             <div className="text-center pt-3">
                 { imgPath != null ? <img style={{ width: "150px", height: "150px"}} src={imgPath} alt="Image icon" /> : null}
                 <h5 className="pt-1">{props.file.originname.substring(0, 18)}</h5>
@@ -37,7 +48,7 @@ const File = props => {
                         </form>
                     </div>
                     <div className="col-md-5">
-                        <button className="btn btn-outline-secondary" onClick={() => props.deletefile(props.file.filename)} type="submit">Delete</button>
+                        <button className="btn btn-outline-secondary" onClick={() => props.deletefile(props.file.filename)}>Delete</button>
                     </div> 
                 </div>
             </div> 
