@@ -39,6 +39,45 @@ const findUserByCookie = cookieValue => {
     });
 }
 
+const deleteFile = async (file, user, gfs) => {
+    const cursor = gfs.find({ filename: file});
+    for await (const doc of cursor) {
+        if(doc.filename){
+            console.log(`\nDeleting file: "${file}"\nFrom user: "${user.username}"`);
+            gfs.delete(doc._id).catch(async err => {
+                const verifyCursor = gfs.find({ filename: doc.filename });
+                for await (const verifyDoc of verifyCursor){
+                    gfs.delete(verifyDoc._id).catch(err => console.log(`ERROR: ${err}`));
+                }
+            });
+            // Delete the array element where filename == doc.filename
+            dbConnection.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: { filename: doc.filename } } })
+            .catch(err => {
+                console.log(`ERROR: ${err}`);
+            });
+        }
+    }
+}
+
+function deleteFolder(folder, path, user, gfs) {
+    return new Promise((resolve, reject) => {
+        console.log(`\nDeleting folder ${folder}\nOn path ${path}`);
+        const filesOnderPath = user.ownsFiles.filter(file => file.path.startsWith(`${path}${folder}/`));
+        for(let i=0; i<filesOnderPath.length; i++){
+            if(filesOnderPath[i].filename){
+                deleteFile(filesOnderPath[i].filename, user, gfs)
+            }else{
+                console.log(`\nTHE PATH ${path}${folder}/`);
+                deleteFolder(filesOnderPath[i].originname, `${path}${folder}/`, user, gfs)
+                .catch(err => reject(err));
+            }
+        }
+        dbConnection.collection("users").updateOne({ username: user.username },
+        { $pull: { ownsFiles: { originname: folder, path: path } } });
+        resolve();
+    });
+}
+
 module.exports = 
 {
     connectToDb: () => {
@@ -123,30 +162,8 @@ module.exports =
         });
     },
 
-    deleteFolder: (folder, path, user, gfs) => {
-        return new Promise((resolve, reject) => {
-            console.log(`\nDeleting folder ${folder}\nOn path ${path}`);
-            const filesOnderPath = user.ownsFiles.filter(file => file.path.startsWith(`${path}${folder}/`));
-            let cursor; 
-            filesOnderPath.forEach(async file => {
-                cursor = gfs.find({ filename: file.filename});
-                for await (const doc of cursor) {
-                    if(doc.filename){
-                        console.log(`\nDeleting file: "${doc.filename}"\nFrom user: "${user.username}"`);
-                        gfs.delete(doc._id);
-                        // Delete the array element where filename == doc.filename
-                        dbConnection.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: { filename: doc.filename } } })
-                        .catch(err => {
-                            reject(err);
-                        });
-                    }
-                }
-            });
-            dbConnection.collection("users").updateOne({ username: user.username },
-                { $pull: { ownsFiles: { originname: folder, path: path } } });
-            resolve();
-        });
-    }
+    deleteFile,
+    
+    deleteFolder
 
 }
-

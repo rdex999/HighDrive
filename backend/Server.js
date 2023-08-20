@@ -211,13 +211,11 @@ app.post("/api/deletefolder", (req, res) => {
             if(user){
                 deleteFolder(req.body.folderName, req.body.path, user, gfs)
                 .then(() => {
-                    console.log("Deleted folder", req.body.folderName, "successfully");
                     res.json({ state: 1 });
-                })
-                .catch( err => {
+                }).catch(err => {
                     console.log(`ERROR: ${err}`);
-                    res.clearCookie("login").redirect("/");
-                });
+                    res.json({ state: 0 });
+                })
             }else{
                 res.clearCookie("login").redirect("/");
             }
