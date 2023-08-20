@@ -1,6 +1,8 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const multerGridfs = require("multer-gridfs-storage");
 const crypto = require("crypto");
+const { resolve } = require("path");
+const { rejects } = require("assert");
 
 const connectionString = "mongodb://127.0.0.1:27017/HighDrive";
 
@@ -86,7 +88,7 @@ module.exports =
                     findUserByCookie(req.cookies.login).then(user => {
                         if(user){
                             dbConnection.collection("users").updateOne({ username: user.username },
-                                { $push: { ownsFiles: { filename: newFilename, originname: file.originalname } } });
+                                { $push: { ownsFiles: { filename: newFilename, originname: file.originalname, path: req.query.path } } });
                             console.log(`\nID: ${id}`);
                         }else{
                             reject("Incorrect password");
@@ -108,6 +110,17 @@ module.exports =
 
     findUserByCookie,
 
-    createCookieId
+    createCookieId,
+
+    folderDontExists: (foldersList, folder, path) => {
+        return new Promise((resolve, reject) => {
+            foldersList.forEach(item => {
+                if(item.path === path && item.originname === folder){
+                    reject(item);
+                }
+            });
+            resolve();
+        });
+    }
 }
 

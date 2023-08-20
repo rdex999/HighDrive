@@ -5,13 +5,17 @@ import { DndContext, closestCenter, MouseSensor, useSensor, useSensors} from "@d
 const Home = () => {
     const [files, setFiles] = useState([]);
     const [username, setUsername] = useState(null);
+    const [path, setPath] = useState("/");
+    const [newDirName, setNewDirName] = useState("");
+    const [createDirMsg, setCreateDirMsg] = useState("");
 
     useEffect(() => {
         fetch("/api/listfiles").then(res => res.json().then(data => {
             setUsername(data.username);
             setFiles(data.files);
+            console.log("use effect executed");
         })).catch(err => console.log(err));
-    }, []);
+    }, [path]);
 
     const deleteFile = filename => {
         fetch(`/api/deletefile/${filename}`)
@@ -39,6 +43,44 @@ const Home = () => {
     });
     const sensors = useSensors(mouseSensor);    
 
+    const handleCreateDirSubmit = event => {
+        event.preventDefault();
+        fetch(`/api/createfolder/?path=${path}`, {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                folderName: newDirName
+            })
+        }).then(res => res.json()).then(jsonData => {
+            if(jsonData.state === 1){
+                fetch("/api/listfiles").then(res => res.json().then(data => {
+                    setUsername(data.username);
+                    setFiles(data.files);
+                })).catch(err => console.log(err));
+                setCreateDirMsg(
+                    <div>
+                        <br />
+                        <p style={{ maxWidth: "17%"}} className="border border-success text-success">Created directory successfully!</p>
+                    </div>
+                );
+            }else if(jsonData.state === 0){
+                fetch("/api/listfiles").then(res => res.json().then(data => {
+                    setUsername(data.username);
+                    setFiles(data.files);
+                })).catch(err => console.log(err));
+                setCreateDirMsg(
+                    <div>
+                        <br />
+                        <p style={{ maxWidth: "17%"}} className="border border-danger text-danger">Directory {newDirName} already exists.</p>
+                    </div>     
+                );
+            }
+        })
+    };
+
     return (
         <div className="container-fluid">
             {username &&
@@ -46,26 +88,34 @@ const Home = () => {
                     <h2>Welcome to High Drive, {username}</h2>
                     <button className="btn btn-outline-dark" onClick={() => {fetch("/api/signout"); setUsername(null) }}>Sign out</button> 
                     <br /><br />
-                    <form encType="multipart/form-data" action="/api/upload" method="post" ref={uploadFilesForm} onChange={handleChange}>
+                    <form encType="multipart/form-data" action={`/api/upload/?path=${path}`} method="post" ref={uploadFilesForm} onChange={handleChange}>
                         <div class="mb-3">
                             <label className="fs-3" htmlFor="files">Upload files:</label>
                             <input class="form-control" style={{ maxWidth: "17%" }} name="files" type="file" id="formFileMultiple" multiple/>
                         </div> 
                     </form>
+                    <form onSubmit={handleCreateDirSubmit} className="input-group">
+                        <button className="btn btn-light" type="submit">Create folder</button>
+                        <input onChange={event => setNewDirName(event.target.value)} style={{maxWidth: "17%"}} className="form-control" name="folderName" placeholder="Folder name" type="text" />
+                    </form>
+                    {createDirMsg}
                     <div className="container pt-2 my-5 ">
+                        <h4>path: {path}</h4>
                         <h3>Your files:</h3>
                         <br />
                         <div className="container">
                             <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
-                            <div className="row gap-4"> 
-                                { 
-                                    files.map(newFile => {
-                                        return (
-                                            <File file={newFile} deletefile={deleteFile}/>
-                                        );
-                                    })
-                                }
-                            </div>
+                                <div className="row gap-4"> 
+                                    { 
+                                        files.map(newFile => {
+                                            if(newFile.path === path){
+                                                return (
+                                                    <File file={newFile} deletefile={deleteFile} changeDirectory={setPath} path={path}/>
+                                                );
+                                            }
+                                        })
+                                    }
+                                </div>
                             </DndContext>
                         </div>
                     </div>

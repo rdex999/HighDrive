@@ -1,5 +1,5 @@
 const express = require("express");
-const { connectToDb, userExist, createUser, findUser, storage, createCookieId, findUserByCookie } = require("./database.js");
+const { connectToDb, userExist, createUser, findUser, storage, createCookieId, findUserByCookie, folderDontExists } = require("./database.js");
 const { exit } = require("process");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -128,7 +128,7 @@ app.get("/api/signout", (req, res) => {
 });
 
 app.post("/api/upload", upload.array("files"), (req, res) => {
-    req.files.forEach(file => console.log(`UPLOAD: ${file.filename}`));
+    req.files.forEach(file => console.log(`UPLOAD: ${file.filename}\npath: ${req.query.path}`));
     res.redirect("/");
 });
 
@@ -173,6 +173,31 @@ app.get("/api/deletefile/:filename", (req, res) => {
             res.status(500).clearCookie("login").redirect("/");
             console.log(err);
         });
+    }
+});
+
+// state 0: folder already exists
+// state 1: created folder successfully
+app.post("/api/createfolder", (req, res) => {
+    if(req.cookies.login && req.body.folderName && req.query.path){
+        findUserByCookie(req.cookies.login).then(user => {
+            if(user){
+                folderDontExists(user.ownsFiles, req.body.folderName, req.query.path)
+                .then(() => {
+                    console.log(`\nCreating folder: ${req.body.folderName}\nOn path: ${req.query.path}`);
+                    database.collection("users").updateOne({ username: user.username },
+                        { $push: { ownsFiles: {filename: null, originname: req.body.folderName, path: req.query.path } } });
+                    res.json({ state: 1 })
+                }).catch(item => res.json({ state: 0 }));
+            }else{
+                res.clearCookie("login").redirect("/");
+            }
+        }).catch(err => {
+            console.log(err);
+            res.clearCookie("login").redirect("/");
+        });
+    }else{
+        res.redirect("/");
     }
 });
 
