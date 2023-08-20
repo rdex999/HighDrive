@@ -1,5 +1,7 @@
 const express = require("express");
-const { connectToDb, userExist, createUser, findUser, storage, createCookieId, findUserByCookie, folderDontExists } = require("./database.js");
+const { connectToDb, userExist, createUser, findUser,
+    storage, createCookieId, findUserByCookie, folderDontExists,
+    deleteFolder } = require("./database.js");
 const { exit } = require("process");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
@@ -207,10 +209,15 @@ app.post("/api/deletefolder", (req, res) => {
         findUserByCookie(req.cookies.login)
         .then(user => {
             if(user){
-                console.log(`\nDeleting folder ${req.body.folderName}\nOn path ${req.body.path}`);
-                database.collection("users").updateOne({ username: user.username },
-                    { $pull: { ownsFiles: { originname: req.body.folderName, path: req.body.path } } });
-                res.json({ state: 1 });
+                deleteFolder(req.body.folderName, req.body.path, user, gfs)
+                .then(() => {
+                    console.log("Deleted folder", req.body.folderName, "successfully");
+                    res.json({ state: 1 });
+                })
+                .catch( err => {
+                    console.log(`ERROR: ${err}`);
+                    res.clearCookie("login").redirect("/");
+                });
             }else{
                 res.clearCookie("login").redirect("/");
             }

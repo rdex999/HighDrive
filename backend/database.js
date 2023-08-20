@@ -121,6 +121,32 @@ module.exports =
             });
             resolve();
         });
+    },
+
+    deleteFolder: (folder, path, user, gfs) => {
+        return new Promise((resolve, reject) => {
+            console.log(`\nDeleting folder ${folder}\nOn path ${path}`);
+            const filesOnderPath = user.ownsFiles.filter(file => file.path.startsWith(`${path}${folder}/`));
+            let cursor; 
+            filesOnderPath.forEach(async file => {
+                cursor = gfs.find({ filename: file.filename});
+                for await (const doc of cursor) {
+                    if(doc.filename){
+                        console.log(`\nDeleting file: "${doc.filename}"\nFrom user: "${user.username}"`);
+                        gfs.delete(doc._id);
+                        // Delete the array element where filename == doc.filename
+                        dbConnection.collection("users").updateOne({ username: user.username }, { $pull: { ownsFiles: { filename: doc.filename } } })
+                        .catch(err => {
+                            reject(err);
+                        });
+                    }
+                }
+            });
+            dbConnection.collection("users").updateOne({ username: user.username },
+                { $pull: { ownsFiles: { originname: folder, path: path } } });
+            resolve();
+        });
     }
+
 }
 
