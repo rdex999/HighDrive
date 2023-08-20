@@ -32,8 +32,9 @@ app.listen(8080, () => {
     console.log("\nStarting server on port 8080.\n");
 });
 
-// Make everything in the "dist" folder available from the browser (a stylesheet.css file for example)
+// Make everything in the "dist" and "images" folders available from the browser (a stylesheet.css file for example)
 app.use(express.static("./dist"));
+app.use(express.static("./images"));
 
 // Make json available (from post requests and stf)
 app.use(express.json());
