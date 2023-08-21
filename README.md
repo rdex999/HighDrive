@@ -1,7 +1,9 @@
 # HighDrive
 A "cloud" drive on your local network that you can sign in to using a user-name and a password to store files.  
 I used Nodejs for the server, Express for the api, Mongodb for the database, React for the frontend framework, and bootstrap for styling.  
-  
+
+![Screenshot from 2023-08-21 16-21-26](https://github.com/rdex999/HighDrive/assets/78908040/bef2986c-6210-4849-82c5-563f7f5acc2d)
+
 The server can be accessed on your local network, `http://<ServersIp>:8080`  
 Replace `<ServersIp>` with the servers ip address.  
 
