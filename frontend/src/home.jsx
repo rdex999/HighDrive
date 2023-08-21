@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
+import { DndContext, rectIntersection, MouseSensor, useSensor, useSensors} from "@dnd-kit/core";
 import File from "./file";
-import Folder from "./folder"
-import { DndContext, closestCenter, MouseSensor, useSensor, useSensors} from "@dnd-kit/core";
+import Folder from "./folder";
+import BackButton from "./backButton";
 
 const Home = () => {
     const [files, setFiles] = useState([]);
@@ -129,11 +130,21 @@ const Home = () => {
                     </form>
                     {createDirMsg}
                     <div className="container pt-2 my-5 ">
-                        <h4>path: {path}</h4>
-                        <h3>Your files:</h3>
-                        <br />
-                        <div className="container">
-                            <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
+                        <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd} sensors={sensors}>
+                            <div className="row">
+                                <div className="col-md-1">
+                                    <BackButton setPath={setPath} path={path}/> 
+                                </div> 
+                                <div className="col-md-1"> 
+                                    <h4>path:</h4>
+                                </div>
+                                <div className="col-md-1">
+                                    <h4>{path}</h4>
+                                </div>
+                            </div> 
+                            <h3>Your files:</h3>
+                            <br />
+                            <div className="container">
                                 <div className="row gap-4"> 
                                     { 
                                         files.map(newFile => {
@@ -151,8 +162,8 @@ const Home = () => {
                                         })
                                     }
                                 </div>
-                            </DndContext>
-                        </div>
+                            </div>
+                        </DndContext>
                     </div>
                 </div>
             }
