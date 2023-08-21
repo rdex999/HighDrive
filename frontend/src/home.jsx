@@ -27,22 +27,24 @@ const Home = () => {
     };
 
     const handleDragEnd = event => {
-        fetch("/api/changefilepath", {
-            method: "post",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                filename: event.active.id,
-                folder: event.over.id,
-                path: path
+        if(event.over){
+            fetch("/api/changefilepath", {
+                method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: event.active.id,
+                    folder: event.over.id,
+                    path: path
+                })
+            }).then(res => res.json()).then(data => {
+                reloadFiles(setUsername, setFiles);
+            }).catch(err => {
+                console.log(err);
             })
-        }).then(res => res.json()).then(data => {
-            reloadFiles(setUsername, setFiles);
-        }).catch(err => {
-            console.log(err);
-        })
+        }
     };
    
     const mouseSensor = useSensor(MouseSensor, {
