@@ -44,7 +44,7 @@ const deleteFile = async (file, user, gfs) => {
     for await (const doc of cursor) {
         if(doc.filename){
             console.log(`\nDeleting file: "${file}"\nFrom user: "${user.username}"`);
-            gfs.delete(doc._id).catch(async err => {
+            gfs.delete(doc._id).catch(async err => { // For some reason this solves the error..
                 const verifyCursor = gfs.find({ filename: doc.filename });
                 for await (const verifyDoc of verifyCursor){
                     gfs.delete(verifyDoc._id).catch(err => console.log(`ERROR: ${err}`));
@@ -62,16 +62,18 @@ const deleteFile = async (file, user, gfs) => {
 function deleteFolder(folder, path, user, gfs) {
     return new Promise((resolve, reject) => {
         console.log(`\nDeleting folder ${folder}\nOn path ${path}`);
+        // Get every file that starts with the path
         const filesOnderPath = user.ownsFiles.filter(file => file.path.startsWith(`${path}${folder}/`));
         for(let i=0; i<filesOnderPath.length; i++){
             if(filesOnderPath[i].filename){
                 deleteFile(filesOnderPath[i].filename, user, gfs)
             }else{
-                console.log(`\nTHE PATH ${path}${folder}/`);
+                console.log(`\nDeleting inner folder in path: ${path}${folder}/`);
                 deleteFolder(filesOnderPath[i].originname, `${path}${folder}/`, user, gfs)
                 .catch(err => reject(err));
             }
         }
+        // remove the filder from the users ownsFiles array
         dbConnection.collection("users").updateOne({ username: user.username },
         { $pull: { ownsFiles: { originname: folder, path: path } } });
         resolve();
