@@ -36,10 +36,6 @@ const File = props => {
             break;
     }
 
-    if(props.file.filename == null){
-        imgPath = "folderIcon.png";
-    }
-
     return (
         <div ref={setNodeRef} {...listeners} {...attributes} style={style} className="col-md-2 bg-light border border-secondary rounded pb-3">
             <div className="text-center pt-3">
@@ -55,15 +51,6 @@ const File = props => {
                         <div className="col-md-5">
                             <button className="btn btn-outline-secondary" onClick={() => props.deletefile(props.file.filename)}>Delete</button>
                         </div> 
-                    </div>
-                }
-                { props.file.filename == null &&
-                    <div>
-                        <button className="btn btn-light" onClick={() => props.changeDirectory(`${props.path}${props.file.originname}/`)}>
-                            <img style={{ width: "150px", height: "150px"}} src={imgPath} alt="Image icon" />
-                            <h5 className="pt-1">{props.file.originname.substring(0, 18)}</h5>
-                        </button>
-                        <button className="btn btn-outline-secondary" onClick={() => props.deleteFolder(props.file.originname, props.path)}>Delete</button>
                     </div>
                 }
             </div> 

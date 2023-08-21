@@ -228,6 +228,29 @@ app.post("/api/deletefolder", (req, res) => {
     }
 });
 
+// state 1: changed path successfully
+// state 0: error
+app.post("/api/changefilepath", (req ,res) => {
+    findUserByCookie(req.cookies.login).then(user => {
+        if(user){
+            let files = user.ownsFiles;
+            let objectToChange = user.ownsFiles.find(file => file.filename === req.body.filename);
+            const index = user.ownsFiles.indexOf(objectToChange);
+            objectToChange.path = `${req.body.path}${req.body.folder}/`;
+            files[index] = objectToChange;
+            console.log(`\nChanging path of file: "${req.body.filename}"\nto path: "${req.body.path}${req.body.folder}/"`);
+            database.collection("users").updateOne({ username: user.username },
+                { $set: {ownsFiles: files }});
+            res.json({ state: 1 });
+        }else{
+            res.clearCookie("login").redirect("/");
+        }
+    }).catch(err => {
+        console.log(`ERROR: ${err}`);
+        res.clearCookie("login").redirect("/");
+    })
+});
+
 app.use((req, res) => {
     res.status(404).json({ error: 404 });
 });

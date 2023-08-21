@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import File from "./file";
+import Folder from "./folder"
 import { DndContext, closestCenter, MouseSensor, useSensor, useSensors} from "@dnd-kit/core";
 
 const Home = () => {
@@ -26,7 +27,22 @@ const Home = () => {
     };
 
     const handleDragEnd = event => {
-        console.log("drag end");
+        fetch("/api/changefilepath", {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filename: event.active.id,
+                folder: event.over.id,
+                path: path
+            })
+        }).then(res => res.json()).then(data => {
+            reloadFiles(setUsername, setFiles);
+        }).catch(err => {
+            console.log(err);
+        })
     };
    
     const mouseSensor = useSensor(MouseSensor, {
@@ -120,9 +136,15 @@ const Home = () => {
                                     { 
                                         files.map(newFile => {
                                             if(newFile.path === path){
-                                                return (
-                                                    <File file={newFile} deletefile={deleteFile} changeDirectory={setPath} path={path} deleteFolder={deleteFolder}/>
-                                                );
+                                                if(newFile.filename != null){
+                                                    return (
+                                                        <File file={newFile} deletefile={deleteFile} />
+                                                    );
+                                                }else{
+                                                    return (
+                                                        <Folder file={newFile} changeDirectory={setPath} path={path} deleteFolder={deleteFolder}/>
+                                                    );
+                                                }
                                             }
                                         })
                                     }
