@@ -236,7 +236,12 @@ app.post("/api/changefilepath", (req ,res) => {
             let files = user.ownsFiles;
             let objectToChange = user.ownsFiles.find(file => file.filename === req.body.filename);
             const index = user.ownsFiles.indexOf(objectToChange);
-            objectToChange.path = `${req.body.path}${req.body.folder}/`;
+            if(req.body.folder != "back button"){
+                objectToChange.path = `${req.body.path}${req.body.folder}/`;
+            }else if(req.body.folder == "back button"){
+                req.body.path = req.body.path.substring(0, req.body.path.length - 1);
+                objectToChange.path = req.body.path.replace(req.body.path.substring(req.body.path.lastIndexOf("/") + 1, req.body.path.length), "");
+            }
             files[index] = objectToChange;
             console.log(`\nChanging path of file: "${req.body.filename}"\nto path: "${req.body.path}${req.body.folder}/"`);
             database.collection("users").updateOne({ username: user.username },

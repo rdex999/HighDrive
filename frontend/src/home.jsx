@@ -29,6 +29,10 @@ const Home = () => {
 
     const handleDragEnd = event => {
         if(event.over){
+            if(path == "/" && event.over.id == "back button"){
+                reloadFiles(setUsername, setFiles);
+                return;
+            }
             fetch("/api/changefilepath", {
                 method: "post",
                 headers: {
@@ -38,8 +42,8 @@ const Home = () => {
                 body: JSON.stringify({
                     filename: event.active.id,
                     folder: event.over.id,
-                    path: path
-                })
+                    path: path,
+                }),
             }).then(res => res.json()).then(data => {
                 reloadFiles(setUsername, setFiles);
             }).catch(err => {
@@ -142,6 +146,7 @@ const Home = () => {
                                     <h4>{path}</h4>
                                 </div>
                             </div> 
+                            <br />
                             <h3>Your files:</h3>
                             <br />
                             <div className="container">
